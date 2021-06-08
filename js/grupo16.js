@@ -1,3 +1,5 @@
+var puntos=0, vidas=3
+
 //Funciones movimientos personaje
 function salta(){
     console.log("Monito Salta")
@@ -8,7 +10,6 @@ function adelante(){
 function atras(){
     console.log("Monito Retrocede")
 };
-
 
 
 
