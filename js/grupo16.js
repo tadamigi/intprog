@@ -1,4 +1,5 @@
 var puntos=0, vidas=3
+var canvas = document.getElementById('myCanvas')
 
 //Funciones movimientos personaje
 function salta(){
