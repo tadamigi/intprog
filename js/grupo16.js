@@ -1,8 +1,8 @@
 var puntos=0, vidas=3
 var canvas = document.getElementById('myCanvas')
 
+//canvas + imagenes
 function dibujar(){
-	//darle color de fondo al canvas
 	document.getElementById('canvas').style.backgroundImage = "url(img/fondo.png)"
 	var canvas = document.getElementById('canvas');
 	var ctx = canvas.getContext('2d');
@@ -10,19 +10,15 @@ function dibujar(){
 	var imgPersonajeMono = new Image();
 	imgPersonajeMono.src = 'img/mono_sprite.png';
 	imgPersonajeMono.onload = function(){
-		//drawImage (img, x, y, width, height)
 		ctx.drawImage(imgPersonajeMono, 200, 300)
 	}
 
     var imgPersonajeCazador = new Image();
 	imgPersonajeCazador.src = 'img/cazador_sprite.png';
 	imgPersonajeCazador.onload = function(){
-		//drawImage (img, x, y, width, height)
 		ctx.drawImage(imgPersonajeCazador, 25, 280)
 	}
 }
-
-
 
 
 //Funciones movimientos personaje
@@ -35,8 +31,6 @@ function adelante(){
 function atras(){
     console.log("Monito Retrocede")
 };
-
-
 
 
 //Esc a menu
