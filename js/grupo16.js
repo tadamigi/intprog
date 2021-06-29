@@ -1,19 +1,32 @@
-var puntos=0, vidas=3
-var canvas = document.getElementById('myCanvas')
+//variables globales juego
+var canvas, ctx;
+var puntos=0, vidas=3;
+
+//Posiciones fondos
+var posA=0, posB=0;
+
+// Instancias de imagenes
+var imgPersonajeMono = new Image();
+var imgPersonajeCazador = new Image();
+var imgPlataforma = new Image();
+var imgBanana = new Image();
+var imgBananaOro = new Image();
+var imgBananaPodrida = new Image();
+
 
 //canvas + imagenes
 function dibujar(){
-	document.getElementById('canvas').style.backgroundImage = "url(img/fondo.png)"
-	var canvas = document.getElementById('canvas');
-	var ctx = canvas.getContext('2d');
-	
-	var imgPersonajeMono = new Image();
+	document.getElementById('canvas').style.backgroundImage = "url(img/fondo_2.png), url(img/fondo.png)"
+    document.getElementById('canvas').style.backgroundRepeat = "repeat-x, repeat"
+    document.getElementById('canvas').style.backgroundPosition = "0px 290px, 0px 0px"
+	canvas = document.getElementById('canvas');
+	ctx = canvas.getContext('2d');
+		
 	imgPersonajeMono.src = 'img/mono_sprite.png';
 	imgPersonajeMono.onload = function(){
-		ctx.drawImage(imgPersonajeMono, 200, 300)
+		ctx.drawImage(imgPersonajeMono, 350, 300)
 	}
-
-    var imgPersonajeCazador = new Image();
+    
 	imgPersonajeCazador.src = 'img/cazador_sprite.png';
 	imgPersonajeCazador.onload = function(){
 		ctx.drawImage(imgPersonajeCazador, 25, 280)
@@ -23,13 +36,21 @@ function dibujar(){
 
 //Funciones movimientos personaje
 function salta(){
-    console.log("Monito Salta")
+    console.log("Monito Salta");
 };
 function adelante(){
-    console.log("Monito Avanza")
+    console.log("Monito Avanza");
+    posA-=5;
+    posB = posA*1.5
+    canvas.style.backgroundPosition = posB+"px 290px, "+posA+"px 0px"
+    console.log(posA+" "+posB)
 };
 function atras(){
     console.log("Monito Retrocede")
+    //posA+=5;
+    //posB = posA*1.5
+    //document.getElementById('canvas').style.backgroundPosition = posB+"px 290px, "+posA+"px 0px"
+    //console.log(posA+" "+posB) 
 };
 
 
