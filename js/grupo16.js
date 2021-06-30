@@ -41,7 +41,7 @@ var cazador = new Personaje(posXCazador, posYCazador, 67, 137);
 
 
 
-//canvas + imagenes
+//canvas
 function dibujar(){
 	document.getElementById('canvas').style.backgroundImage = "url(img/fondo_00.png), url(img/fondo_01.png), url(img/fondo_02.png), url(img/fondo_03.png), url(img/fondo_04.png)"
     document.getElementById('canvas').style.backgroundPosition = "0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px"
@@ -133,6 +133,17 @@ function Personaje(x, y, ancho, alto){
         }
     }
 
+}
+
+//Objeto Plataformas
+function Plataforma (x, y, ancho, alto){
+    this.x = x;
+    this.y = y;
+    this.alto = alto;
+    this.ancho = ancho;
+    this.dibujar = function(img){
+        ctx.drawImage(img, this.x, this.y, this.ancho, this.alto)
+    }
 }
 
 function borrar(){
