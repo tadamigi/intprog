@@ -3,7 +3,7 @@ var canvas, ctx;
 var puntos=0, vidas=3;
 
 //Posiciones fondos
-var posA=0, posB=0;
+var posA=0, posB=0, posC=0, posD=0, posE=0; 
 
 // Instancias de imagenes
 var imgPersonajeMono = new Image();
@@ -16,9 +16,9 @@ var imgBananaPodrida = new Image();
 
 //canvas + imagenes
 function dibujar(){
-	document.getElementById('canvas').style.backgroundImage = "url(img/fondo_2.png), url(img/fondo.png)"
-    document.getElementById('canvas').style.backgroundRepeat = "repeat-x, repeat"
-    document.getElementById('canvas').style.backgroundPosition = "0px 290px, 0px 0px"
+	document.getElementById('canvas').style.backgroundImage = "url(img/fondo_00.png), url(img/fondo_01.png), url(img/fondo_02.png), url(img/fondo_03.png), url(img/fondo_04.png)"
+//  document.getElementById('canvas').style.backgroundRepeat = "repeat-x, repeat"
+    document.getElementById('canvas').style.backgroundPosition = "0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px"
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 		
@@ -40,10 +40,12 @@ function salta(){
 };
 function adelante(){
     console.log("Monito Avanza");
-    posA-=5;
-    posB = posA*1.5
-    canvas.style.backgroundPosition = posB+"px 290px, "+posA+"px 0px"
-    console.log(posA+" "+posB)
+    posA -= 7;
+    posB = posA*0.5;
+    posC = posB*0.5;
+    posD = posC*0.5;
+    posE = posD*0.5;
+    canvas.style.backgroundPosition = posA+"px 0px, "+posB+"px 0px, "+posC+"px 0px, "+posD+"px 0px, "+posE+"px 0px"
 };
 function atras(){
     console.log("Monito Retrocede")
