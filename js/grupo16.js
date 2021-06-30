@@ -6,6 +6,7 @@ var intervalo;
 //Variables físicas
 var velocidad = 3;
 var gravedad = 0.5;
+var velocidadCazador = 1;
 
 //Posiciones fondos
 var posA=0, posB=0, posC=0, posD=0, posE=0; 
@@ -139,6 +140,17 @@ function Personaje(x, y, ancho, alto){
 function Plataforma (x, y, ancho, alto){
     this.x = x;
     this.y = y;
+    this.alto = alto;
+    this.ancho = ancho;
+    this.dibujar = function(img){
+        ctx.drawImage(img, this.x, this.y, this.ancho, this.alto)
+    }
+}
+//Objeto Bananas
+function Banana (x, y, tipo, ancho, alto){
+    this.x = x;
+    this.y = y;
+    this.tipo = tipo;
     this.alto = alto;
     this.ancho = ancho;
     this.dibujar = function(img){
