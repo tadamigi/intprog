@@ -45,8 +45,8 @@ var posYCazador = 280;
 var posXPlataformaUno = 700;
 var posYPlataformaUno = 235;
 var posXPlataformaDos = 900;
-var posYPlataformaDos = 150;
-var alturaPlataforma = [235, 150]
+var posYPlataformaDos = 120;
+var alturaPlataforma = [235, 120]
 
 //Creacion Instancias
 var mono = new Personaje(posXMono, posYMono, 465, 116, 4, 2);
@@ -212,7 +212,6 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             }
         }
     }
-    
 }
 
 //Objeto Plataformas
@@ -232,15 +231,18 @@ function Plataforma(x, y, ancho, alto, offsetPiso) {
             this.sortear();
         }
     }
+
     this.sortear = function(){
         var ubicArray = Math.floor(Math.random()*2)
         console.log(ubicArray)
         this.y = alturaPlataforma[ubicArray]
         this.x = Math.floor(
-            Math.random()*(1200-850+1)
+            Math.random()*(1500-850+1)
         )+800;
+               
     }
 }
+
 //Objeto Bananas
 function Banana(x, y, tipo, ancho, alto) {
     this.x = x;
@@ -256,7 +258,6 @@ function Banana(x, y, tipo, ancho, alto) {
 function borrar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
-
 
 
 //Inputs Movimiento personaje
