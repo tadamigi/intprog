@@ -8,6 +8,7 @@ var intervalo;
 var velocidad = 3;
 var gravedad = 0.5;
 var velocidadCazador = 1;
+var velocidadGlobal = 7;
 
 //Posiciones fondos
 var posA = 0,
@@ -41,11 +42,17 @@ var posXMono = 350;
 var posYMono = 300;
 var posXCazador = 25;
 var posYCazador = 280;
+var posXPlataformaUno = 700;
+var posYPlataformaUno = 235;
+var posXPlataformaDos = 900;
+var posYPlataformaDos = 150;
+var alturaPlataforma = [235, 150]
 
 //Creacion Instancias
 var mono = new Personaje(posXMono, posYMono, 465, 116, 4, 2);
 var cazador = new Personaje(posXCazador, posYCazador, 67, 137, 1, 1);
-
+var plataformaUno = new Plataforma(posXPlataformaUno, posYPlataformaUno, 180, 54, 23);
+var plataformaDos = new Plataforma(posXPlataformaDos, posYPlataformaDos, 180, 54, 23);
 
 
 //canvas
@@ -66,32 +73,38 @@ function dibujar() {
     imgPersonajeMono.src = srcImgMono;
     imgPersonajeMonoIzq.src = srcImgMonoFlipped; //por el momento flipee la imagen desde archivo, despues vemos si lo podemos hacer desde aca
     imgPersonajeCazador.src = srcImgCazador;
-
+    imgPlataforma.src = srcImgPlataforma;
+    imgPlataformaDos.src = srcImgPlataformaDos;
     
 
     intervalo = setInterval(function() {
         borrar();
-
         if (vidas == 0) {
             ctx.font = "100px impact";
             ctx.fillStyle = "#000000";
             ctx.fillText('FIN', 350, 300);
         } else {
+            plataformaUno.dibujar(imgPlataformaDos);
+            plataformaDos.dibujar(imgPlataformaDos);
             mono.velocidad += gravedad;
             mono.y += mono.velocidad;
             if (mono.y > 416 - mono.alto) {
                 frenarSalto(416)
+            }else if(mono.y > (plataformaUno.y + plataformaUno.offset) - mono.alto && mono.y < (plataformaUno.y+plataformaUno.offset-80) && mono.velocidad>=0 && mono.x > (plataformaUno.x-55) && mono.x < (plataformaUno.x+plataformaUno.ancho-55)){
+                frenarSalto(plataformaUno.y+plataformaUno.offset)
+            }else if(mono.y > (plataformaDos.y + plataformaDos.offset) - mono.alto && mono.y < (plataformaDos.y+plataformaDos.offset-80) && mono.velocidad>=0 && mono.x > (plataformaDos.x-55) && mono.x < (plataformaDos.x+plataformaDos.ancho-55)){
+                frenarSalto(plataformaDos.y+plataformaDos.offset)
             }
             if (mono.orientacion == "der") {
                 if (mono.corre == true){
                     mono.dibujar(imgPersonajeMono);
-                }else{
+                }else if(mono.corre == false){
                     mono.dibujaPose(imgPersonajeMono, 3);
                 }
             } else {
                 if (mono.corre == true){
                     mono.dibujar(imgPersonajeMonoIzq);
-                }else{
+                }else if(mono.corre == false){
                     mono.dibujaPose(imgPersonajeMonoIzq, 0);
                 }
             }
@@ -168,21 +181,23 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
     }
     this.derecha = function() {
         if (this.x == 350) {
+            plataformaUno.mover();
+            plataformaDos.mover();
             // movimiento del fondo
-            posA -= 7;
+            posA -= velocidadGlobal;
             posB = posA * 0.5;
             posC = posB * 0.5;
             posD = posC * 0.5;
             posE = posD * 0.5;
             canvas.style.backgroundPosition = posA + "px 0px, " + posB + "px 0px, " + posC + "px 0px, " + posD + "px 0px, " + posE + "px 0px";
         } else {
-            this.x += 7;
+            this.x += velocidadGlobal;
             this.orientacion = "der"
         }
     }
     this.izquierda = function() {
         if (this.x >= 30) {
-            this.x -= 7;
+            this.x -= velocidadGlobal;
             this.orientacion = "izq"
         }
     }
@@ -197,17 +212,33 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             }
         }
     }
-
+    
 }
 
 //Objeto Plataformas
-function Plataforma(x, y, ancho, alto) {
+function Plataforma(x, y, ancho, alto, offsetPiso) {
     this.x = x;
     this.y = y;
     this.alto = alto;
     this.ancho = ancho;
+    this.offset = offsetPiso;
     this.dibujar = function(img) {
         ctx.drawImage(img, this.x, this.y, this.ancho, this.alto)
+    }
+    this.mover = function(){
+        if (this.x > (-this.ancho)){
+            this.x -= velocidadGlobal
+        }else{
+            this.sortear();
+        }
+    }
+    this.sortear = function(){
+        var ubicArray = Math.floor(Math.random()*2)
+        console.log(ubicArray)
+        this.y = alturaPlataforma[ubicArray]
+        this.x = Math.floor(
+            Math.random()*(1200-850+1)
+        )+800;
     }
 }
 //Objeto Bananas
@@ -228,81 +259,74 @@ function borrar() {
 
 
 
+//Inputs Movimiento personaje
+document.addEventListener('keydown', function(e) {
+    //    console.log('keydown'+mono.corre)
+    switch (e.keyCode) {
+        case 38:
+            mono.saltar();
+            mono.saltando=true;
+            break;
+        case 87:
+            mono.saltar();
+            mono.saltando=true;
+            break;
+        case 32:
+            mono.saltar();
+            mono.saltando=true;
+            break;
+        case 39:
+            mono.derecha();
+            mono.corre = true;
+            break;
+        case 68:
+            mono.derecha();
+            mono.corre = true;
+            break;
+        case 37:
+            mono.izquierda();
+            mono.corre = true;
+            break;
+        case 65:
+            mono.izquierda();
+            mono.corre = true;
+            break;
+    }
+});
+
+document.addEventListener('keyup', function(e) {
+    switch (e.keyCode) {
+        case 38:
+            
+            break;
+        case 87:
+            
+            break;
+        case 32:
+            
+            break;
+        case 39:
+            mono.corre = false;
+            break;
+        case 68:
+            mono.corre = false;
+            break;
+        case 37:
+            mono.corre = false;
+            break;
+        case 65:
+            mono.corre = false;
+            break;
+    }
+        //console.log('keyup'+mono.corre)
+});
+
 //Esc a menu
 document.addEventListener('keyup', function(e) {
     if (e.keyCode == 27) {
         console.log("Salir a menu")
     }
 });
-
-//Inputs Movimiento personaje
-document.addEventListener('keydown', function(e) {
-    //    console.log(e)
-    switch (e.keyCode) {
-        case 38:
-            mono.saltar();
-            break;
-        case 87:
-            mono.saltar();
-            break;
-        case 32:
-            mono.saltar();
-            break;
-        case 39:
-            mono.derecha();
-            setTimeout(function(){
-                mono.corre = true;
-            },80);
-            break;
-        case 68:
-            mono.derecha();
-            setTimeout(function(){
-                mono.corre = true;
-            },80);
-            break;
-        case 37:
-            mono.izquierda();
-            setTimeout(function(){
-                mono.corre = true;
-            },80);
-            break;
-        case 65:
-            mono.izquierda();
-            setTimeout(function(){
-                mono.corre = true;
-            },80);
-            break;
-    }
-});
-document.addEventListener('keyup', function(e) {
-    //    console.log(e)
-    switch (e.keyCode) {
-        case 38:
-            
-            break;
-        case 87:
-            
-            break;
-        case 32:
-            
-            break;
-        case 39:
-            
-            mono.corre = false;
-            break;
-        case 68:
-            
-            mono.corre = false;
-            break;
-        case 37:
-            mono.corre = false;
-            break;
-        case 65:
-            mono.corre = false;
-            break;
-    }
-}); 
-
 
 //Mouse Menu [cambiar document por el id del boton que pulse]
 document.addEventListener('click', function(o) {
