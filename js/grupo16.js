@@ -31,6 +31,7 @@ var imgBananaPodrida = new Image();
 
 //SRC Imagenes
 var srcImgMono = 'img/monoSpritemono.png';
+var srcImgMonoFlipped = "img/monoSpritemono_flipped.png";
 var srcImgCazador = 'img/cazador_sprite.png';
 var srcImgPlataforma = 'img/plataforma.png';
 var srcImgPlataformaDos = 'img/plataforma_2.png';
@@ -43,7 +44,7 @@ var posYCazador = 280;
 
 //Creacion Instancias
 var mono = new Personaje(posXMono, posYMono, 465, 116, 4, 2);
-var cazador = new Personaje(posXCazador, posYCazador, 67, 137);
+var cazador = new Personaje(posXCazador, posYCazador, 67, 137, 1, 1);
 
 
 
@@ -54,17 +55,19 @@ function dibujar() {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
-    imgPersonajeMono.src = srcImgMono;
-    imgPersonajeMono.onload = function() {
-        ctx.drawImage(imgPersonajeMono, posXMono, posYMono);
-    }
-    imgPersonajeMonoIzq.src = "img/monoSpritemono_flipped.png"; //por el momento flipee la imagen desde archivo, despues vemos si lo podemos hacer desde aca
-    imgPersonajeMonoIzq.style.transform = "scaleX(-1)";
-
-    imgPersonajeCazador.src = srcImgCazador;
+    // que se dibuje al comienzo y luego entre al intervalo
+    //imgPersonajeMono.onload = function() {
+    //    mono.dibujar(imgPersonajeMono);
+    // }
     imgPersonajeCazador.onload = function() {
-        ctx.drawImage(imgPersonajeCazador, posXCazador, posYCazador)
+        cazador.dibujar(imgPersonajeCazador);
     }
+
+    imgPersonajeMono.src = srcImgMono;
+    imgPersonajeMonoIzq.src = srcImgMonoFlipped; //por el momento flipee la imagen desde archivo, despues vemos si lo podemos hacer desde aca
+    imgPersonajeCazador.src = srcImgCazador;
+
+    
 
     intervalo = setInterval(function() {
         borrar();
@@ -76,14 +79,21 @@ function dibujar() {
         } else {
             mono.velocidad += gravedad;
             mono.y += mono.velocidad;
-            if (mono.y > 410 - mono.alto) {
-                frenarSalto(410)
+            if (mono.y > 416 - mono.alto) {
+                frenarSalto(416)
             }
             if (mono.orientacion == "der") {
-                mono.dibujar(imgPersonajeMono);
+                if (mono.corre == true){
+                    mono.dibujar(imgPersonajeMono);
+                }else{
+                    mono.dibujaPose(imgPersonajeMono, 3);
+                }
             } else {
-                mono.dibujar(imgPersonajeMonoIzq);
-                console.log("voy izq");
+                if (mono.corre == true){
+                    mono.dibujar(imgPersonajeMonoIzq);
+                }else{
+                    mono.dibujaPose(imgPersonajeMonoIzq, 0);
+                }
             }
             mono.actualizar();
             cazador.dibujar(imgPersonajeCazador);
@@ -106,6 +116,7 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
     this.orientacion = "der";
     this.velocidad = 0;
     this.saltando = false;
+    this.corre = false
 
     //atributos animacion personaje
     this.fotogramasTotales = fotogramasTotales;
@@ -116,13 +127,9 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
     //metodos
     //metodo actualizar los fotogramas de animacion
     this.actualizar = function() {
-
         this.contador += 1;
-
         if (this.contador > tiempoPorFotograma) {
-
             this.contador = 0;
-
             // va pasando de fotogramas
             if (this.fotogramaActual < fotogramasTotales - 1) {
                 //ir al fotograma siguiente
@@ -139,6 +146,18 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
         ctx.drawImage(
             img,
             this.fotogramaActual * this.ancho / this.fotogramasTotales,
+            0,
+            this.ancho / this.fotogramasTotales,
+            this.alto,
+            this.x,
+            this.y,
+            this.ancho / this.fotogramasTotales,
+            this.alto);
+    }
+    this.dibujaPose = function(img, fotograma){
+            ctx.drawImage(
+            img,
+            fotograma * this.ancho / this.fotogramasTotales,
             0,
             this.ancho / this.fotogramasTotales,
             this.alto,
@@ -231,18 +250,59 @@ document.addEventListener('keydown', function(e) {
             break;
         case 39:
             mono.derecha();
+            setTimeout(function(){
+                mono.corre = true;
+            },80);
             break;
         case 68:
             mono.derecha();
+            setTimeout(function(){
+                mono.corre = true;
+            },80);
             break;
         case 37:
             mono.izquierda();
+            setTimeout(function(){
+                mono.corre = true;
+            },80);
             break;
         case 65:
             mono.izquierda();
+            setTimeout(function(){
+                mono.corre = true;
+            },80);
             break;
     }
 });
+document.addEventListener('keyup', function(e) {
+    //    console.log(e)
+    switch (e.keyCode) {
+        case 38:
+            
+            break;
+        case 87:
+            
+            break;
+        case 32:
+            
+            break;
+        case 39:
+            
+            mono.corre = false;
+            break;
+        case 68:
+            
+            mono.corre = false;
+            break;
+        case 37:
+            mono.corre = false;
+            break;
+        case 65:
+            mono.corre = false;
+            break;
+    }
+}); 
+
 
 //Mouse Menu [cambiar document por el id del boton que pulse]
 document.addEventListener('click', function(o) {
