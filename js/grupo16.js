@@ -1,8 +1,9 @@
 //variables globales
 var canvas, ctx;
-var puntos = 0,
-    vidas = 3;
+var puntos = 0;
+var vidas = 3;
 var intervalo;
+var distanciaDisparo = 0;
 
 //Variables físicas
 var velocidad = 3;
@@ -33,26 +34,40 @@ var imgBananaPodrida = new Image();
 //SRC Imagenes
 var srcImgMono = 'img/monoSpritemono.png';
 var srcImgMonoFlipped = "img/monoSpritemono_flipped.png";
-var srcImgCazador = 'img/cazador_sprite.png';
+var srcImgCazador = 'img/spriteCazador2.png';
 var srcImgPlataforma = 'img/plataforma.png';
 var srcImgPlataformaDos = 'img/plataforma_2.png';
+var srcImgBanana = 'img/bananaNM.png';
+var srcImgBananaOro = 'img/bananaRB.png';
+var srcImgBananaPodrida = 'img/bananaZB.png';
 
-//Posicion Inicial Personaje
+//Posicion Inicial Personajes
 var posXMono = 350;
 var posYMono = 300;
-var posXCazador = 25;
-var posYCazador = 280;
+var posXCazador = -500;
+var posYCazador = 275;
+
+
+//variables elementos
 var posXPlataformaUno = 700;
 var posYPlataformaUno = 235;
 var posXPlataformaDos = 900;
 var posYPlataformaDos = 120;
-var alturaPlataforma = [235, 120]
+var alturaPlataforma = [235, 120];
+//var alturaBananas = [235, 120, 275];
+var posXBanana = 700;
+var posYBanana = 235;
+
 
 //Creacion Instancias
 var mono = new Personaje(posXMono, posYMono, 465, 116, 4, 2);
-var cazador = new Personaje(posXCazador, posYCazador, 67, 137, 1, 1);
+var cazador = new Personaje(posXCazador, posYCazador, 608, 152, 4, 2);
 var plataformaUno = new Plataforma(posXPlataformaUno, posYPlataformaUno, 180, 54, 23);
 var plataformaDos = new Plataforma(posXPlataformaDos, posYPlataformaDos, 180, 54, 23);
+var banana = new Banana(posXBanana, posYBanana, "normal", 70, 70);
+var bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70);
+var bananaPodrida = new Banana(posXBanana, posYBanana, "podrida", 70, 70);
+
 
 
 //canvas
@@ -75,7 +90,10 @@ function dibujar() {
     imgPersonajeCazador.src = srcImgCazador;
     imgPlataforma.src = srcImgPlataforma;
     imgPlataformaDos.src = srcImgPlataformaDos;
-    
+    imgBanana.src = srcImgBanana;
+    imgBananaOro.src = srcImgBananaOro;
+    imgBananaPodrida.src = srcImgBananaPodrida;
+
 
     intervalo = setInterval(function() {
         borrar();
@@ -84,32 +102,50 @@ function dibujar() {
             ctx.fillStyle = "#000000";
             ctx.fillText('FIN', 350, 300);
         } else {
-            plataformaUno.dibujar(imgPlataformaDos);
+            plataformaUno.dibujar(imgPlataforma);
             plataformaDos.dibujar(imgPlataformaDos);
             mono.velocidad += gravedad;
             mono.y += mono.velocidad;
             if (mono.y > 416 - mono.alto) {
                 frenarSalto(416)
-            }else if(mono.y > (plataformaUno.y + plataformaUno.offset) - mono.alto && mono.y < (plataformaUno.y+plataformaUno.offset-80) && mono.velocidad>=0 && mono.x > (plataformaUno.x-55) && mono.x < (plataformaUno.x+plataformaUno.ancho-55)){
-                frenarSalto(plataformaUno.y+plataformaUno.offset)
-            }else if(mono.y > (plataformaDos.y + plataformaDos.offset) - mono.alto && mono.y < (plataformaDos.y+plataformaDos.offset-80) && mono.velocidad>=0 && mono.x > (plataformaDos.x-55) && mono.x < (plataformaDos.x+plataformaDos.ancho-55)){
-                frenarSalto(plataformaDos.y+plataformaDos.offset)
+            } else if (mono.y > (plataformaUno.y + plataformaUno.offset) - mono.alto && mono.y < (plataformaUno.y + plataformaUno.offset - 80) && mono.velocidad >= 0 && mono.x > (plataformaUno.x - 55) && mono.x < (plataformaUno.x + plataformaUno.ancho - 55)) {
+                frenarSalto(plataformaUno.y + plataformaUno.offset)
+            } else if (mono.y > (plataformaDos.y + plataformaDos.offset) - mono.alto && mono.y < (plataformaDos.y + plataformaDos.offset - 80) && mono.velocidad >= 0 && mono.x > (plataformaDos.x - 55) && mono.x < (plataformaDos.x + plataformaDos.ancho - 55)) {
+                frenarSalto(plataformaDos.y + plataformaDos.offset)
             }
             if (mono.orientacion == "der") {
-                if (mono.corre == true){
+                if (mono.corre == true) {
                     mono.dibujar(imgPersonajeMono);
-                }else if(mono.corre == false){
+                } else if (mono.corre == false) {
                     mono.dibujaPose(imgPersonajeMono, 3);
                 }
             } else {
-                if (mono.corre == true){
+                if (mono.corre == true) {
                     mono.dibujar(imgPersonajeMonoIzq);
-                }else if(mono.corre == false){
+                } else if (mono.corre == false) {
                     mono.dibujaPose(imgPersonajeMonoIzq, 0);
                 }
             }
+            if (mono.x - cazador.x < 200) {
+                cazador.disparar();
+                //console.log("entre");
+            }
+
             mono.actualizar();
+            cazador.actualizar();
             cazador.dibujar(imgPersonajeCazador);
+            console.log(cazador.x);
+
+            //pruebas con bananas
+            //bananaPodrida.dibujar(imgBananaPodrida);
+            //banana.dibujar(imgBanana);
+            bananaOro.dibujar(imgBananaOro);
+            bananaOro.posicionBanana();
+            bananaOro.colision();
+
+            ui();
+
+
         }
     }, 1000 / 25);
 }
@@ -167,8 +203,8 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             this.ancho / this.fotogramasTotales,
             this.alto);
     }
-    this.dibujaPose = function(img, fotograma){
-            ctx.drawImage(
+    this.dibujaPose = function(img, fotograma) {
+        ctx.drawImage(
             img,
             fotograma * this.ancho / this.fotogramasTotales,
             0,
@@ -178,6 +214,8 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             this.y,
             this.ancho / this.fotogramasTotales,
             this.alto);
+        cazador.cazadorAvanza();
+
     }
     this.derecha = function() {
         if (this.x == 350) {
@@ -199,6 +237,8 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
         if (this.x >= 30) {
             this.x -= velocidadGlobal;
             this.orientacion = "izq"
+            cazador.cazadorAvanza();
+
         }
     }
     this.saltar = function() {
@@ -212,6 +252,17 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             }
         }
     }
+    this.disparar = function() {
+        distanciaDisparo == mono.x - cazador.x; // la variable da 0 nose porque
+        //console.log(distanciaDisparo);
+        vidas -= 1;
+    }
+    this.cazadorAvanza = function() {
+        cazador.x += 5;
+    }
+    this.cazadorRetrocede = function() {
+        cazador.x -= 20;
+    }
 }
 
 //Objeto Plataformas
@@ -224,22 +275,22 @@ function Plataforma(x, y, ancho, alto, offsetPiso) {
     this.dibujar = function(img) {
         ctx.drawImage(img, this.x, this.y, this.ancho, this.alto)
     }
-    this.mover = function(){
-        if (this.x > (-this.ancho)){
+    this.mover = function() {
+        if (this.x > (-this.ancho)) {
             this.x -= velocidadGlobal
-        }else{
+        } else {
             this.sortear();
         }
     }
 
-    this.sortear = function(){
-        var ubicArray = Math.floor(Math.random()*2)
+    this.sortear = function() {
+        var ubicArray = Math.floor(Math.random() * 2)
         console.log(ubicArray)
         this.y = alturaPlataforma[ubicArray]
         this.x = Math.floor(
-            Math.random()*(1500-850+1)
-        )+800;
-               
+            Math.random() * (1500 - 850 + 1)
+        ) + 800;
+
     }
 }
 
@@ -250,8 +301,44 @@ function Banana(x, y, tipo, ancho, alto) {
     this.tipo = tipo;
     this.alto = alto;
     this.ancho = ancho;
+
+    //metodos
     this.dibujar = function(img) {
         ctx.drawImage(img, this.x, this.y, this.ancho, this.alto)
+    }
+    this.posicionBanana = function() {
+        this.x = plataformaDos.x + plataformaDos.ancho / 3;
+        this.y = plataformaDos.y - 50;
+    }
+
+
+    this.colision = function() {
+        if (
+            (this.x < mono.x + mono.ancho / 4) &&
+            (this.x > mono.x - this.ancho) &&
+            (this.y > mono.y - this.alto) &&
+            (this.y < mono.y + mono.alto)
+        ) {
+            if (this.tipo == "normal") {
+                console.log("soy normal");
+                puntos += 5;
+                cazador.cazadorRetrocede();
+
+            } else if (this.tipo == "oro") {
+                console.log("soy rainbow");
+                puntos += 10;
+                cazador.cazadorRetrocede();
+                cazador.cazadorRetrocede();
+
+
+            } else if (this.tipo == "podrida") {
+                //podrida
+                console.log("estoy podrida");
+                cazador.cazadorAvanza();
+
+            }
+            //this.sortear();
+        }
     }
 }
 
@@ -259,6 +346,12 @@ function borrar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+function ui() {
+    ctx.font = "20px Impact";
+    ctx.fillStyle = "#000000";
+    ctx.fillText("Vidas: " + vidas, 715, 40); //el primero es el texto, el segundo es x y el tercero es y
+    ctx.fillText("Puntos: " + puntos, 20, 40);
+}
 
 //Inputs Movimiento personaje
 document.addEventListener('keydown', function(e) {
@@ -266,15 +359,15 @@ document.addEventListener('keydown', function(e) {
     switch (e.keyCode) {
         case 38:
             mono.saltar();
-            mono.saltando=true;
+            mono.saltando = true;
             break;
         case 87:
             mono.saltar();
-            mono.saltando=true;
+            mono.saltando = true;
             break;
         case 32:
             mono.saltar();
-            mono.saltando=true;
+            mono.saltando = true;
             break;
         case 39:
             mono.derecha();
@@ -298,13 +391,13 @@ document.addEventListener('keydown', function(e) {
 document.addEventListener('keyup', function(e) {
     switch (e.keyCode) {
         case 38:
-            
+
             break;
         case 87:
-            
+
             break;
         case 32:
-            
+
             break;
         case 39:
             mono.corre = false;
@@ -319,7 +412,7 @@ document.addEventListener('keyup', function(e) {
             mono.corre = false;
             break;
     }
-        //console.log('keyup'+mono.corre)
+    //console.log('keyup'+mono.corre)
 });
 
 //Esc a menu
