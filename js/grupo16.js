@@ -64,9 +64,9 @@ var mono = new Personaje(posXMono, posYMono, 465, 116, 4, 2);
 var cazador = new Personaje(posXCazador, posYCazador, 608, 152, 4, 2);
 var plataformaUno = new Plataforma(posXPlataformaUno, posYPlataformaUno, 180, 54, 23);
 var plataformaDos = new Plataforma(posXPlataformaDos, posYPlataformaDos, 180, 54, 23);
-var banana = new Banana(posXBanana, posYBanana, "normal", 70, 70);
-var bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70);
-var bananaPodrida = new Banana(posXBanana, posYBanana, "podrida", 70, 70);
+var banana = new Banana(posXBanana, posYBanana, "normal", 70, 70, false);
+var bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70, false);
+var bananaPodrida = new Banana(posXBanana, posYBanana, "podrida", 70, 70, false);
 
 
 
@@ -139,8 +139,16 @@ function dibujar() {
             //pruebas con bananas
             //bananaPodrida.dibujar(imgBananaPodrida);
             //banana.dibujar(imgBanana);
-            bananaOro.dibujar(imgBananaOro);
-            bananaOro.posicionBanana();
+            
+            if (plataformaDos.x > 800 && plataformaDos.x < 850){
+                bananaOro.activa = true;
+            }
+            if (bananaOro.activa == true) {
+                bananaOro.dibujar(imgBananaOro);
+                bananaOro.posicionBanana();
+            }else{
+                bananaOro.x = 850;
+            }
             bananaOro.colision();
 
             ui();
@@ -189,8 +197,6 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             }
         }
     }
-
-
     this.dibujar = function(img) {
         ctx.drawImage(
             img,
@@ -290,17 +296,18 @@ function Plataforma(x, y, ancho, alto, offsetPiso) {
         this.x = Math.floor(
             Math.random() * (1500 - 850 + 1)
         ) + 800;
-
+        
     }
 }
 
 //Objeto Bananas
-function Banana(x, y, tipo, ancho, alto) {
+function Banana(x, y, tipo, ancho, alto, activa) {
     this.x = x;
     this.y = y;
     this.tipo = tipo;
     this.alto = alto;
     this.ancho = ancho;
+    this.activa = activa;
 
     //metodos
     this.dibujar = function(img) {
@@ -310,8 +317,6 @@ function Banana(x, y, tipo, ancho, alto) {
         this.x = plataformaDos.x + plataformaDos.ancho / 3;
         this.y = plataformaDos.y - 50;
     }
-
-
     this.colision = function() {
         if (
             (this.x < mono.x + mono.ancho / 4) &&
@@ -337,6 +342,7 @@ function Banana(x, y, tipo, ancho, alto) {
                 cazador.cazadorAvanza();
 
             }
+            this.activa = false;
             //this.sortear();
         }
     }
