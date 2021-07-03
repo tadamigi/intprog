@@ -5,6 +5,7 @@ var vidas = 3;
 var intervalo;
 var distanciaDisparo = 0;
 
+
 //Variables físicas
 var velocidad = 3;
 var gravedad = 0.5;
@@ -137,19 +138,16 @@ function dibujar() {
             console.log(cazador.x);
 
             //pruebas con bananas
-            //bananaPodrida.dibujar(imgBananaPodrida);
-            //banana.dibujar(imgBanana);
-            
-            if (plataformaDos.x > 800 && plataformaDos.x < 850){
-                bananaOro.activa = true;
+            if (plataformaDos.x > 800 && plataformaDos.x < 850) {
+                banana.activa = true;
             }
-            if (bananaOro.activa == true) {
-                bananaOro.dibujar(imgBananaOro);
-                bananaOro.posicionBanana();
-            }else{
-                bananaOro.x = 850;
+            if (banana.activa == true) {
+                banana.dibujar(imgBanana);
+                banana.posicionBanana();
+            } else {
+                banana.x = 850;
             }
-            bananaOro.colision();
+            banana.colision();
 
             ui();
 
@@ -264,10 +262,10 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
         vidas -= 1;
     }
     this.cazadorAvanza = function() {
-        cazador.x += 5;
+        cazador.x += 3;
     }
     this.cazadorRetrocede = function() {
-        cazador.x -= 20;
+        cazador.x -= 5;
     }
 }
 
@@ -296,7 +294,7 @@ function Plataforma(x, y, ancho, alto, offsetPiso) {
         this.x = Math.floor(
             Math.random() * (1500 - 850 + 1)
         ) + 800;
-        
+
     }
 }
 
@@ -327,19 +325,41 @@ function Banana(x, y, tipo, ancho, alto, activa) {
             if (this.tipo == "normal") {
                 console.log("soy normal");
                 puntos += 5;
-                cazador.cazadorRetrocede();
+                var boost = setInterval(function() {
+                    velocidadGlobal += 1;
+                    cazador.cazadorRetrocede();
+                }, 1000 / 25);
+                setTimeout(function() {
+                        velocidadGlobal = 7;
+                        clearInterval(boost);
+                    }, 2000) // boost por 2 segundos
+
 
             } else if (this.tipo == "oro") {
                 console.log("soy rainbow");
                 puntos += 10;
-                cazador.cazadorRetrocede();
-                cazador.cazadorRetrocede();
+                var boost = setInterval(function() {
+                    velocidadGlobal += 1;
+                    cazador.cazadorRetrocede();
+
+                }, 1000 / 25);
+                setTimeout(function() {
+                        velocidadGlobal = 7;
+                        clearInterval(boost);
+                    }, 3000) // boost por 3 segundos
+
 
 
             } else if (this.tipo == "podrida") {
-                //podrida
-                console.log("estoy podrida");
-                cazador.cazadorAvanza();
+                var boost = setInterval(function() {
+                    velocidadGlobal = 3;
+                    cazador.cazadorAvanza();
+                }, 1000 / 25);
+                setTimeout(function() {
+                        console.log("Listo")
+                        velocidadGlobal = 7;
+                        clearInterval(boost);
+                    }, 3000) // pierde velocidad por 3 segundos
 
             }
             this.activa = false;
