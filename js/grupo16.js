@@ -3,7 +3,7 @@ var canvas, ctx;
 var puntos = 0;
 var vidas = 3;
 var intervalo;
-var distanciaDisparo = 0;
+var distanciaDisparo = 150;
 
 
 //Variables físicas
@@ -127,7 +127,7 @@ function dibujar() {
                     mono.dibujaPose(imgPersonajeMonoIzq, 0);
                 }
             }
-            if (mono.x - cazador.x < 200) {
+            if (mono.x - cazador.x < distanciaDisparo) {
                 cazador.disparar();
                 //console.log("entre");
             }
@@ -222,7 +222,7 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
 
     }
     this.derecha = function() {
-        if (this.x == 350) {
+        if (this.x >= 350) {
             plataformaUno.mover();
             plataformaDos.mover();
             // movimiento del fondo
@@ -257,9 +257,10 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
         }
     }
     this.disparar = function() {
-        distanciaDisparo == mono.x - cazador.x; // la variable da 0 nose porque
+        //distanciaDisparo == mono.x - cazador.x; // la variable da 0 nose porque // ESTO NO VA
         //console.log(distanciaDisparo);
         vidas -= 1;
+        cazador.x = -50;
     }
     this.cazadorAvanza = function() {
         cazador.x += 3;
@@ -328,11 +329,12 @@ function Banana(x, y, tipo, ancho, alto, activa) {
                 var boost = setInterval(function() {
                     velocidadGlobal += 1;
                     cazador.cazadorRetrocede();
+                    mono.derecha();
                 }, 1000 / 25);
                 setTimeout(function() {
                         velocidadGlobal = 7;
                         clearInterval(boost);
-                    }, 2000) // boost por 2 segundos
+                    }, 1000) // boost por 2 segundos
 
 
             } else if (this.tipo == "oro") {
@@ -340,13 +342,13 @@ function Banana(x, y, tipo, ancho, alto, activa) {
                 puntos += 10;
                 var boost = setInterval(function() {
                     velocidadGlobal += 1;
+                    mono.derecha();
                     cazador.cazadorRetrocede();
-
                 }, 1000 / 25);
                 setTimeout(function() {
                         velocidadGlobal = 7;
                         clearInterval(boost);
-                    }, 3000) // boost por 3 segundos
+                    }, 2000) // boost por 3 segundos
 
 
 
@@ -354,6 +356,7 @@ function Banana(x, y, tipo, ancho, alto, activa) {
                 var boost = setInterval(function() {
                     velocidadGlobal = 3;
                     cazador.cazadorAvanza();
+                    mono.derecha();
                 }, 1000 / 25);
                 setTimeout(function() {
                         console.log("Listo")
