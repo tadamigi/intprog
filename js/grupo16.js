@@ -10,7 +10,7 @@ var distanciaDisparo = 150;
 var velocidad = 3;
 var gravedad = 0.5;
 var velocidadCazador = 1;
-var velocidadGlobal = 7;
+var velocidadGlobal = 10;
 
 //Posiciones fondos
 var posA = 0,
@@ -65,9 +65,9 @@ var mono = new Personaje(posXMono, posYMono, 465, 116, 4, 2);
 var cazador = new Personaje(posXCazador, posYCazador, 608, 152, 4, 2);
 var plataformaUno = new Plataforma(posXPlataformaUno, posYPlataformaUno, 180, 54, 23);
 var plataformaDos = new Plataforma(posXPlataformaDos, posYPlataformaDos, 180, 54, 23);
-var banana = new Banana(posXBanana, posYBanana, "normal", 70, 70, false);
-var bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70, false);
-var bananaPodrida = new Banana(posXBanana, posYBanana, "podrida", 70, 70, false);
+var bananaUno = new Banana(posXBanana, posYBanana, "normal", 70, 70, 'plataformaUno', false);
+var bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70, 'plataformaDos', false);
+var bananaPodrida = new Banana(posXBanana, posYBanana, "podrida", 70, 70, 'piso', false);
 
 
 
@@ -114,6 +114,13 @@ function dibujar() {
             } else if (mono.y > (plataformaDos.y + plataformaDos.offset) - mono.alto && mono.y < (plataformaDos.y + plataformaDos.offset - 80) && mono.velocidad >= 0 && mono.x > (plataformaDos.x - 55) && mono.x < (plataformaDos.x + plataformaDos.ancho - 55)) {
                 frenarSalto(plataformaDos.y + plataformaDos.offset)
             }
+            if (plataformaDos.x > plataformaUno.x && plataformaDos.x < plataformaUno.x + plataformaUno.ancho) {
+                plataformaDos.sortear()
+            }
+            if (plataformaUno.x > plataformaDos.x && plataformaUno.x < plataformaDos.x + plataformaDos.ancho) {
+                plataformaUno.sortear()
+            }
+
             if (mono.orientacion == "der") {
                 if (mono.corre == true) {
                     mono.dibujar(imgPersonajeMono);
@@ -138,16 +145,29 @@ function dibujar() {
             console.log(cazador.x);
 
             //pruebas con bananas
-            if (plataformaDos.x > 800 && plataformaDos.x < 850) {
-                banana.activa = true;
+            if (plataformaUno.x > 800 && plataformaUno.x < 850) {
+                bananaUno.activa = true;
             }
-            if (banana.activa == true) {
-                banana.dibujar(imgBanana);
-                banana.posicionBanana();
+            if (bananaUno.activa == true) {
+                bananaUno.dibujar(imgBanana);
+                bananaUno.posicionBanana();
             } else {
-                banana.x = 850;
+                bananaUno.x = 850;
             }
-            banana.colision();
+            if (plataformaDos.x > 800 && plataformaDos.x < 850) {
+                bananaOro.activa = true;
+            }
+            if (bananaOro.activa == true) {
+                bananaOro.dibujar(imgBananaOro);
+                bananaOro.posicionBanana();
+            } else {
+                bananaOro.x = 850;
+            }
+            
+            
+            bananaUno.colision();
+            bananaOro.colision();
+            
 
             ui();
 
@@ -285,36 +305,45 @@ function Plataforma(x, y, ancho, alto, offsetPiso) {
             this.x -= velocidadGlobal
         } else {
             this.sortear();
+            
         }
     }
 
     this.sortear = function() {
         var ubicArray = Math.floor(Math.random() * 2)
-        console.log(ubicArray)
+        //console.log(ubicArray)
         this.y = alturaPlataforma[ubicArray]
         this.x = Math.floor(
-            Math.random() * (1500 - 850 + 1)
+            Math.random() * (1600 - 900 + 1)
         ) + 800;
 
     }
 }
 
 //Objeto Bananas
-function Banana(x, y, tipo, ancho, alto, activa) {
+function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
     this.x = x;
     this.y = y;
     this.tipo = tipo;
     this.alto = alto;
     this.ancho = ancho;
     this.activa = activa;
+    this.posAlto = posAlto;
 
     //metodos
     this.dibujar = function(img) {
         ctx.drawImage(img, this.x, this.y, this.ancho, this.alto)
     }
     this.posicionBanana = function() {
-        this.x = plataformaDos.x + plataformaDos.ancho / 3;
-        this.y = plataformaDos.y - 50;
+        if (posAlto == 'plataformaUno'){
+            this.x = plataformaUno.x + plataformaUno.ancho / 3;
+            this.y = plataformaUno.y - 50;
+        }
+        if (posAlto == 'plataformaDos'){
+            this.x = plataformaDos.x + plataformaDos.ancho / 3;
+            this.y = plataformaDos.y - 50;
+        }
+        
     }
     this.colision = function() {
         if (
