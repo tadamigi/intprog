@@ -10,7 +10,7 @@ var distanciaDisparo = 150;
 var velocidad = 3;
 var gravedad = 0.5;
 var velocidadCazador = 1;
-var velocidadGlobal = 10;
+var velocidadGlobal = 7;
 
 //Posiciones fondos
 var posA = 0,
