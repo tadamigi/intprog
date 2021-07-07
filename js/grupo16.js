@@ -1,6 +1,6 @@
 //variables globales
 var canvas, ctx;
-var puntos = 0;
+var puntos = 000;
 var vidas = 3;
 var intervalo;
 var distanciaDisparo = 150;
@@ -92,7 +92,14 @@ var bananaPodrida = new Banana(posXBanana, posYBanana, "podrida", 70, 70, 'piso'
 var vidaUno = new Hud(20, 25, 32, 32);
 var vidaDos = new Hud(65, 25, 32, 32);
 var vidaTres = new Hud(110, 25, 32, 32);
+var posCazador = new Hud(200, 25, 18, 20);
+var posMono = new Hud(250, 25, 28, 20);
+var posMeta = new Hud(598, 25, 12, 22);
 
+
+
+var fuente = new FontFace('SuperMario', "url('resources/New Super Mario Font U.ttf')");
+document.fonts.add(fuente);
 
 
 //canvas
@@ -115,9 +122,9 @@ function dibujar() {
     intervalo = setInterval(function() {
         borrar();
         if (vidas == 0) {
-            ctx.font = "100px impact";
+            ctx.font = "100px SuperMario";
             ctx.fillStyle = "#000000";
-            ctx.fillText('FIN', 350, 300);
+            ctx.fillText('FIN', 300, 250);
         } else {
             plataformaUno.dibujar(imgPlataforma);
             plataformaDos.dibujar(imgPlataformaDos);
@@ -204,6 +211,9 @@ function dibujar() {
             
 
             ui();
+            ctx.fillStyle = '#000000';
+	        //dibuja rectangulo (x, y, widtth, height) en realidad linea
+	        ctx.fillRect(200, 47, 400, 3);
 
             if (vidas == 3){
                 vidaUno.dibujar(hudDardoOff);
@@ -222,7 +232,9 @@ function dibujar() {
                 vidaDos.dibujar(hudDardoOn);
                 vidaTres.dibujar(hudDardoOn);
             }
-            
+            posCazador.dibujar(hudProgresoCazador);
+            posMono.dibujar(hudProgresoMono);
+            posMeta.dibujar(hudProgresoMeta);
 
 
         }
@@ -479,11 +491,13 @@ function borrar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+
+
 function ui() {
-    ctx.font = "20px Impact";
-    ctx.fillStyle = "#000000";
+    ctx.font = "40px SuperMario";
+    ctx.fillStyle = "#2b2b2b";
     //ctx.fillText("Vidas: " + vidas, 715, 40); //el primero es el texto, el segundo es x y el tercero es y
-    ctx.fillText("Puntos: " + puntos, 690, 40);
+    ctx.fillText(puntos, 690, 50);
 }
 
 //Inputs Movimiento personaje
