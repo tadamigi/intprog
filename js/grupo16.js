@@ -4,6 +4,8 @@ var puntos = 0;
 var vidas = 3;
 var intervalo;
 var distanciaDisparo = 150;
+var distanciaDiferencia = 0;
+var seqDisparo = 0;
 
 
 //Variables físicas
@@ -25,7 +27,9 @@ var posPlataformaDos;
 // Instancias de imagenes
 var imgPersonajeMono = new Image();
 var imgPersonajeMonoIzq = new Image();
+var imgPersonajeMonoSalta = new Image();
 var imgPersonajeCazador = new Image();
+var imgPersonajeCazadorDisparo = new Image();
 var imgPlataforma = new Image();
 var imgPlataformaDos = new Image();
 var imgBanana = new Image();
@@ -35,7 +39,9 @@ var imgBananaPodrida = new Image();
 //SRC Imagenes
 var srcImgMono = 'img/monoSpritemono.png';
 var srcImgMonoFlipped = "img/monoSpritemono_flipped.png";
+var srcImgMonoSalto = "img/monoSalto.png";
 var srcImgCazador = 'img/spriteCazador2.png';
+var srcImgCazadorDisparo = 'img/spriteCazadorDisparo.png';
 var srcImgPlataforma = 'img/plataforma.png';
 var srcImgPlataformaDos = 'img/plataforma_2.png';
 var srcImgBanana = 'img/bananaNM.png';
@@ -70,11 +76,10 @@ var bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70, 'plataformaDos
 var bananaPodrida = new Banana(posXBanana, posYBanana, "podrida", 70, 70, 'piso', false);
 
 
-
 //canvas
 function dibujar() {
-    document.getElementById('canvas').style.backgroundImage = "url(img/fondo_00.png), url(img/fondo_01.png), url(img/fondo_02.png), url(img/fondo_03.png), url(img/fondo_04.png)"
-    document.getElementById('canvas').style.backgroundPosition = "0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px"
+    //document.getElementById('canvas').style.backgroundImage = "url(img/fondo_00.png), url(img/fondo_01.png), url(img/fondo_02.png), url(img/fondo_03.png), url(img/fondo_04.png)"
+    //document.getElementById('canvas').style.backgroundPosition = "0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px"
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
@@ -88,7 +93,9 @@ function dibujar() {
 
     imgPersonajeMono.src = srcImgMono;
     imgPersonajeMonoIzq.src = srcImgMonoFlipped; //por el momento flipee la imagen desde archivo, despues vemos si lo podemos hacer desde aca
+    imgPersonajeMonoSalta.src = srcImgMonoSalto;
     imgPersonajeCazador.src = srcImgCazador;
+    imgPersonajeCazadorDisparo.src = srcImgCazadorDisparo;
     imgPlataforma.src = srcImgPlataforma;
     imgPlataformaDos.src = srcImgPlataformaDos;
     imgBanana.src = srcImgBanana;
@@ -120,28 +127,46 @@ function dibujar() {
             if (plataformaUno.x > plataformaDos.x && plataformaUno.x < plataformaDos.x + plataformaDos.ancho) {
                 plataformaUno.sortear()
             }
-
-            if (mono.orientacion == "der") {
-                if (mono.corre == true) {
-                    mono.dibujar(imgPersonajeMono);
-                } else if (mono.corre == false) {
-                    mono.dibujaPose(imgPersonajeMono, 3);
-                }
+            if (mono.saltando == true){
+                mono.dibujaPose(imgPersonajeMonoSalta, 0);
             } else {
-                if (mono.corre == true) {
-                    mono.dibujar(imgPersonajeMonoIzq);
-                } else if (mono.corre == false) {
-                    mono.dibujaPose(imgPersonajeMonoIzq, 0);
+                if (mono.orientacion == "der") {
+                    if (mono.corre == true) {
+                        mono.dibujar(imgPersonajeMono);
+                    } else if (mono.corre == false) {
+                        mono.dibujaPose(imgPersonajeMono, 3);
+                    }
+                } else {
+                    if (mono.corre == true) {
+                        mono.dibujar(imgPersonajeMonoIzq);
+                    } else if (mono.corre == false) {
+                        mono.dibujaPose(imgPersonajeMonoIzq, 0);
+                    }
                 }
             }
+            
             if (mono.x - cazador.x < distanciaDisparo) {
                 cazador.disparar();
-                //console.log("entre");
             }
-
-            mono.actualizar();
             cazador.actualizar();
-            cazador.dibujar(imgPersonajeCazador);
+            if (cazador.disparando == false){
+                cazador.dibujar(imgPersonajeCazador);
+            } else {
+                if (seqDisparo <50){
+                    seqDisparo ++
+                    cazador.dibujar(imgPersonajeCazadorDisparo);
+                }else{
+                    vidas -=1
+                    seqDisparo = 0;
+                    cazador.disparando = false;
+                    cazador.cazadorCorre = true;
+                }
+                
+            }
+                  
+           
+            mono.actualizar();
+            
             console.log(cazador.x);
 
             //pruebas con bananas
@@ -191,7 +216,10 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
     this.orientacion = "der";
     this.velocidad = 0;
     this.saltando = false;
-    this.corre = false
+    this.corre = false;
+    this.cazadorCorre = true;
+    
+    this.disparando = false;
 
     //atributos animacion personaje
     this.fotogramasTotales = fotogramasTotales;
@@ -238,7 +266,10 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             this.y,
             this.ancho / this.fotogramasTotales,
             this.alto);
-        cazador.cazadorAvanza();
+        if (cazador.cazadorCorre == true){
+            cazador.cazadorAvanza();
+        }
+            
 
     }
     this.derecha = function() {
@@ -261,7 +292,10 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
         if (this.x >= 30) {
             this.x -= velocidadGlobal;
             this.orientacion = "izq"
-            cazador.cazadorAvanza();
+            if (cazador.cazadorCorre == true){
+                cazador.cazadorAvanza();
+            }
+            
 
         }
     }
@@ -277,10 +311,12 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
         }
     }
     this.disparar = function() {
-        //distanciaDisparo == mono.x - cazador.x; // la variable da 0 nose porque // ESTO NO VA
-        //console.log(distanciaDisparo);
-        vidas -= 1;
-        cazador.x = -50;
+        this.cazadorCorre = false;
+        this.contador = 0;
+        this.disparando = true;
+        cazador.x = 10;
+        this.cazadorCorre = false;
+        
     }
     this.cazadorAvanza = function() {
         cazador.x += 3;
