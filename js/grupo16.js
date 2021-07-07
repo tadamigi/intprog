@@ -145,15 +145,28 @@ function dibujar() {
             }
             if (mono.saltando == true){
                 mono.dibujaPose(imgPersonajeMonoSalta, 0);
+                if (mono.orientacion == "der") {
+                    if (mono.corre == true) {
+                        mono.derecha();
+                        //mono.dibujar(imgPersonajeMono);
+                    }
+                } else {
+                    if (mono.corre == true) {
+                        mono.izquierda();
+                        //mono.dibujar(imgPersonajeMonoIzq);
+                    }
+                }
             } else {
                 if (mono.orientacion == "der") {
                     if (mono.corre == true) {
+                        mono.derecha();
                         mono.dibujar(imgPersonajeMono);
                     } else if (mono.corre == false) {
                         mono.dibujaPose(imgPersonajeMono, 3);
                     }
                 } else {
                     if (mono.corre == true) {
+                        mono.izquierda();
                         mono.dibujar(imgPersonajeMonoIzq);
                     } else if (mono.corre == false) {
                         mono.dibujaPose(imgPersonajeMonoIzq, 0);
@@ -306,7 +319,7 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             this.y,
             this.ancho / this.fotogramasTotales,
             this.alto);
-        if (cazador.cazadorCorre == true){
+        if (cazador.cazadorCorre == true && mono.saltando != true){
             cazador.cazadorAvanza();
         }
             
@@ -517,20 +530,24 @@ document.addEventListener('keydown', function(e) {
             mono.saltando = true;
             break;
         case 39:
-            mono.derecha();
+            //mono.derecha();
             mono.corre = true;
+            mono.orientacion = 'der';
             break;
         case 68:
-            mono.derecha();
+            //mono.derecha();
             mono.corre = true;
+            mono.orientacion = 'der';
             break;
         case 37:
-            mono.izquierda();
+           // mono.izquierda();
             mono.corre = true;
+            mono.orientacion = 'izq';
             break;
         case 65:
-            mono.izquierda();
+            //mono.izquierda();
             mono.corre = true;
+            mono.orientacion = 'izq';
             break;
     }
 });
