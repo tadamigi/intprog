@@ -5,6 +5,9 @@ var vidas = 3;
 var intervalo;
 var distanciaDisparo = 150;
 var distanciaDiferencia = 0;
+var tickerMovDerecha, tickerMovIzquierda;
+
+//bandera
 var seqDisparo = 0;
 
 
@@ -35,18 +38,30 @@ var imgPlataformaDos = new Image();
 var imgBanana = new Image();
 var imgBananaOro = new Image();
 var imgBananaPodrida = new Image();
+// imagenes HUD
+var hudDardoOn = new Image();
+var hudDardoOff = new Image();
+var hudProgresoMono = new Image();
+var hudProgresoCazador = new Image();
+var hudProgresoMeta = new Image();
 
 //SRC Imagenes
-var srcImgMono = 'img/monoSpritemono.png';
-var srcImgMonoFlipped = "img/monoSpritemono_flipped.png";
-var srcImgMonoSalto = "img/monoSalto.png";
-var srcImgCazador = 'img/spriteCazador2.png';
-var srcImgCazadorDisparo = 'img/spriteCazadorDisparo.png';
-var srcImgPlataforma = 'img/plataforma.png';
-var srcImgPlataformaDos = 'img/plataforma_2.png';
-var srcImgBanana = 'img/bananaNM.png';
-var srcImgBananaOro = 'img/bananaRB.png';
-var srcImgBananaPodrida = 'img/bananaZB.png';
+imgPersonajeMono.src = 'img/monoSpritemono.png';
+imgPersonajeMonoIzq.src = "img/monoSpritemono_flipped.png";//por el momento flipee la imagen desde archivo, despues vemos si lo podemos hacer desde aca
+imgPersonajeMonoSalta.src = "img/monoSalto.png";
+imgPersonajeCazador.src = 'img/spriteCazador2.png';
+imgPersonajeCazadorDisparo.src = 'img/spriteCazadorDisparo.png';
+imgPlataforma.src = 'img/plataforma.png';
+imgPlataformaDos.src = 'img/plataforma_2.png';
+imgBanana.src = 'img/bananaNM.png';
+imgBananaOro.src = 'img/bananaRB.png';
+imgBananaPodrida.src = 'img/bananaZB.png';
+//SRC imagenes HUD
+hudProgresoCazador.src = 'img/faceCazador.png';
+hudProgresoMono.src = 'img/faceMono.png';
+hudProgresoMeta.src = 'img/flag.png';
+hudDardoOn.src = 'img/dardoOn.png';
+hudDardoOff.src = 'img/dardoOff.png';
 
 //Posicion Inicial Personajes
 var posXMono = 350;
@@ -74,6 +89,10 @@ var plataformaDos = new Plataforma(posXPlataformaDos, posYPlataformaDos, 180, 54
 var bananaUno = new Banana(posXBanana, posYBanana, "normal", 70, 70, 'plataformaUno', false);
 var bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70, 'plataformaDos', false);
 var bananaPodrida = new Banana(posXBanana, posYBanana, "podrida", 70, 70, 'piso', false);
+var vidaUno = new Hud(20, 25, 32, 32);
+var vidaDos = new Hud(65, 25, 32, 32);
+var vidaTres = new Hud(110, 25, 32, 32);
+
 
 
 //canvas
@@ -91,16 +110,6 @@ function dibujar() {
         cazador.dibujar(imgPersonajeCazador);
     }
 
-    imgPersonajeMono.src = srcImgMono;
-    imgPersonajeMonoIzq.src = srcImgMonoFlipped; //por el momento flipee la imagen desde archivo, despues vemos si lo podemos hacer desde aca
-    imgPersonajeMonoSalta.src = srcImgMonoSalto;
-    imgPersonajeCazador.src = srcImgCazador;
-    imgPersonajeCazadorDisparo.src = srcImgCazadorDisparo;
-    imgPlataforma.src = srcImgPlataforma;
-    imgPlataformaDos.src = srcImgPlataformaDos;
-    imgBanana.src = srcImgBanana;
-    imgBananaOro.src = srcImgBananaOro;
-    imgBananaPodrida.src = srcImgBananaPodrida;
 
 
     intervalo = setInterval(function() {
@@ -156,14 +165,14 @@ function dibujar() {
                     seqDisparo ++
                     cazador.dibujar(imgPersonajeCazadorDisparo);
                 }else{
-                    vidas -=1
-                    seqDisparo = 0;
+                                        seqDisparo = 0;
                     cazador.disparando = false;
                     cazador.cazadorCorre = true;
                 }
-                
             }
-                  
+            if (seqDisparo == 25){
+                vidas -=1
+            }    
            
             mono.actualizar();
             
@@ -195,6 +204,25 @@ function dibujar() {
             
 
             ui();
+
+            if (vidas == 3){
+                vidaUno.dibujar(hudDardoOff);
+                vidaDos.dibujar(hudDardoOff);
+                vidaTres.dibujar(hudDardoOff);
+            } else if (vidas == 2) {
+                vidaUno.dibujar(hudDardoOn);
+                vidaDos.dibujar(hudDardoOff);
+                vidaTres.dibujar(hudDardoOff);
+            } else if (vidas == 1) {
+                vidaUno.dibujar(hudDardoOn);
+                vidaDos.dibujar(hudDardoOn);
+                vidaTres.dibujar(hudDardoOff);
+            } else {
+                vidaUno.dibujar(hudDardoOn);
+                vidaDos.dibujar(hudDardoOn);
+                vidaTres.dibujar(hudDardoOn);
+            }
+            
 
 
         }
@@ -435,6 +463,17 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
         }
     }
 }
+//Objetod HUD
+function Hud(x, y, ancho, alto) {
+    this.x = x;
+    this.y = y;
+    this.ancho = ancho;
+    this.alto = alto;
+
+    this.dibujar = function(img) {
+        ctx.drawImage(img, this.x, this.y, this.ancho, this.alto)
+    }
+}
 
 function borrar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -443,8 +482,8 @@ function borrar() {
 function ui() {
     ctx.font = "20px Impact";
     ctx.fillStyle = "#000000";
-    ctx.fillText("Vidas: " + vidas, 715, 40); //el primero es el texto, el segundo es x y el tercero es y
-    ctx.fillText("Puntos: " + puntos, 20, 40);
+    //ctx.fillText("Vidas: " + vidas, 715, 40); //el primero es el texto, el segundo es x y el tercero es y
+    ctx.fillText("Puntos: " + puntos, 690, 40);
 }
 
 //Inputs Movimiento personaje
@@ -506,7 +545,7 @@ document.addEventListener('keyup', function(e) {
             mono.corre = false;
             break;
     }
-    //console.log('keyup'+mono.corre)
+    console.log('keyup'+e.key)
 });
 
 //Esc a menu
