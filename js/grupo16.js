@@ -12,8 +12,8 @@ var seqDisparo = 0;
 
 
 //Variables físicas
-var velocidad = 3;
-var gravedad = 0.5;
+var velocidad = 4.2;
+var gravedad = 1;
 var velocidadCazador = 1;
 var velocidadGlobal = 7;
 
@@ -413,7 +413,7 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
         if (
             (this.x < mono.x + mono.ancho / 4) &&
             (this.x > mono.x - this.ancho) &&
-            (this.y > mono.y - this.alto) &&
+            (this.y > mono.y - this.alto + 10) &&
             (this.y < mono.y + mono.alto)
         ) {
             if (this.tipo == "normal") {
