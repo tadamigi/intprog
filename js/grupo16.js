@@ -94,7 +94,7 @@ var vidaDos = new Hud(65, 25, 32, 32);
 var vidaTres = new Hud(110, 25, 32, 32);
 var posCazador = new Hud(200, 25, 18, 20);
 var posMono = new Hud(250, 25, 28, 20);
-var posMeta = new Hud(598, 25, 12, 22);
+var posMeta = new Hud(597, 23, 12, 22);
 
 
 
@@ -211,7 +211,7 @@ function dibujar() {
             
 
             ui();
-            ctx.fillStyle = '#000000';
+            ctx.fillStyle = '#3f3f3f';
 	        //dibuja rectangulo (x, y, widtth, height) en realidad linea
 	        ctx.fillRect(200, 47, 400, 3);
 
