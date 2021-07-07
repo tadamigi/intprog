@@ -132,9 +132,9 @@ function dibujar() {
             mono.y += mono.velocidad;
             if (mono.y > 416 - mono.alto) {
                 frenarSalto(416)
-            } else if (mono.y > (plataformaUno.y + plataformaUno.offset) - mono.alto && mono.y < (plataformaUno.y + plataformaUno.offset - 80) && mono.velocidad >= 0 && mono.x > (plataformaUno.x - 55) && mono.x < (plataformaUno.x + plataformaUno.ancho - 55)) {
+            } else if (mono.y > (plataformaUno.y + plataformaUno.offset) - mono.alto && mono.y < (plataformaUno.y + plataformaUno.offset - 80) && mono.velocidad >= 0 && mono.x > (plataformaUno.x - 62) && mono.x < (plataformaUno.x + plataformaUno.ancho - 60)) {
                 frenarSalto(plataformaUno.y + plataformaUno.offset)
-            } else if (mono.y > (plataformaDos.y + plataformaDos.offset) - mono.alto && mono.y < (plataformaDos.y + plataformaDos.offset - 80) && mono.velocidad >= 0 && mono.x > (plataformaDos.x - 55) && mono.x < (plataformaDos.x + plataformaDos.ancho - 55)) {
+            } else if (mono.y > (plataformaDos.y + plataformaDos.offset) - mono.alto && mono.y < (plataformaDos.y + plataformaDos.offset - 80) && mono.velocidad >= 0 && mono.x > (plataformaDos.x - 62) && mono.x < (plataformaDos.x + plataformaDos.ancho - 60)) {
                 frenarSalto(plataformaDos.y + plataformaDos.offset)
             }
             if (plataformaDos.x > plataformaUno.x && plataformaDos.x < plataformaUno.x + plataformaUno.ancho) {
