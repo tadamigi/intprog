@@ -6,11 +6,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rainbow Monkey!</title>
     <link rel="shortcut icon" type="image/jpg" href="resources/favicon-32x32.png" />
+    <style>
+        @font-face {
+        font-family: "rainbowMonkey";
+        src: url(resources/rainbow_monkey.ttf);
+        }
+        .button {
+            transition-duration: 0.4s;
+            background-color: transparent;
+        }
+        .button:hover {
+            background-color: rgba(211, 211, 211, 0.329);
+        }
+    </style>
+    <script src="js/grupo16.js"></script>
 </head>
 
-<body onload="dibujar()">
-    <canvas width="800" height="450" id="canvas" style="border: 1px solid rgb(0, 0, 0); background-image: url(&quot;img/fondo_00.png&quot;), url(&quot;img/fondo_01.png&quot;), url(&quot;img/fondo_02.png&quot;), url(&quot;img/fondo_03.png&quot;), url(&quot;img/fondo_04.png&quot;); background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;"></canvas>
-    <script src="js/grupo16.js"></script>
+<body onload="carga()">
+    <div style="position: absolute; width: 800; height: 450;">
+        <canvas width="800" height="450" id="canvas" style="
+        border: 1px solid rgb(18, 37, 17); 
+        background-image: url(&quot;img/fondo_00.png&quot;), url(&quot;img/fondo_01.png&quot;), url(&quot;img/fondo_02.png&quot;), url(&quot;img/fondo_03.png&quot;), url(&quot;img/fondo_04.png&quot;); 
+        background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px; 
+        filter: blur(6px);
+        "></canvas>
+        <img id='logo' src="img/logo.png" style="
+        position: absolute;
+        left: 50%;
+        top: 30%;
+        transform: translate(-50%, -50%);
+        ">
+        <button id='btnJugar' class='button' style='
+        position:absolute; 
+        left: 50%;
+        top: 59%;
+        transform: translate(-50%, -50%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        text-align: center;
+        display: inline-block;
+        font-size: 35px;
+        font-family: rainbowMonkey;
+        ' onclick="jugar()">JUGAR</button>
+        <button id='btnTutorial' class='button' style='
+        position:absolute; 
+        left: 50%;
+        top: 71%;
+        transform: translate(-50%, -50%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        text-align: center;
+        display: inline-block;
+        font-size: 17px;
+        font-family: rainbowMonkey;
+        '>TUTORIAL</button>
+        <button id='btnCreditos' class='button' style='
+        position:absolute; 
+        left: 50%;
+        top: 80%;
+        transform: translate(-50%, -50%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        text-align: center;
+        display: inline-block;
+        font-size: 17px;
+        font-family: rainbowMonkey;
+        '>CREDITOS</button>
+        <button id='resultado' style='
+        position:absolute; 
+        left: 50%;
+        top: 40%;
+        transform: translate(-50%, -50%);
+        color: white;
+        background-color: transparent;
+        border: none;
+        text-align: center;
+        font-size: 50px;
+        font-family: rainbowMonkey;
+        display: none;
+        '>PERDISTE</button>
+        <button id='btnMenu' class='button' style='
+        position:absolute; 
+        left: 50%;
+        top: 80%;
+        transform: translate(-50%, -50%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        text-align: center;
+        display: inline-block;
+        font-size: 35px;
+        font-family: rainbowMonkey;
+        display: none;
+        ' onclick="menu()">MENU PRINCIPAL</button>
+    </div>
+     
+    
 
 </body>
 

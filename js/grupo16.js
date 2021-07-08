@@ -11,6 +11,7 @@ var tickerMovDerecha, tickerMovIzquierda;
 var seqDisparo = 0;
 
 
+
 //Variables físicas
 var velocidad = 4.2;
 var gravedad = 1;
@@ -100,33 +101,95 @@ var posMeta = new Hud(597, 23, 12, 22);
 
 
 
-var fuente = new FontFace('SuperMario', "url('resources/New Super Mario Font U.ttf')");
-document.fonts.add(fuente);
+//var fuente = new FontFace('rainbowMonkey', "url('resources/rainbow_monkey.ttf')");
+//document.fonts.add(fuente);
 
+function carga() {
+    canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
+
+}
+function jugar() {
+    document.getElementById('canvas').style.filter = 'none';
+    document.getElementById('btnJugar').style.display = 'none';
+    document.getElementById('btnTutorial').style.display = 'none';
+    document.getElementById('btnCreditos').style.display = 'none';
+    document.getElementById('logo').style.display = 'none';
+    dibujar();
+}
+function menu() {
+    document.getElementById('resultado').style.display = 'none';
+    document.getElementById('btnMenu').style.display = 'none';
+    document.getElementById('btnJugar').innerHTML = 'JUGAR';
+    document.getElementById('btnJugar').style.display = '';
+    document.getElementById('btnTutorial').style.display = '';
+    document.getElementById('btnCreditos').style.display = '';
+    document.getElementById('logo').style.display = '';
+    reinicio();
+    
+}
+function reinicio() {
+    seqDisparo = 0;
+    puntos = 000;
+    vidas = 3;
+    velocidadGlobal = 7;
+    velocidadCazador = 1;
+    velocidad = 4.2;
+    gravedad = 1;
+    posA = 0;
+    posB = 0;
+    posC = 0;
+    posD = 0;
+    posE = 0;
+    document.getElementById('canvas').style.backgroundPosition = "0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px"
+    posXMono = 350;
+    posYMono = 300;
+    posXCazador = -500;
+    posYCazador = 275;
+    posXPlataformaUno = 700;
+    posYPlataformaUno = 235;
+    posXPlataformaDos = 900;
+    posYPlataformaDos = 120;
+    posXBanana = 700;
+    posYBanana = 235;
+    mono = new Personaje(posXMono, posYMono, 465, 116, 4, 2);
+    cazador = new Personaje(posXCazador, posYCazador, 608, 152, 4, 2);
+    plataformaUno = new Plataforma(posXPlataformaUno, posYPlataformaUno, 180, 54, 23);
+    plataformaDos = new Plataforma(posXPlataformaDos, posYPlataformaDos, 180, 54, 23);
+    bananaUno = new Banana(posXBanana, posYBanana, "normal", 70, 70, 'plataformaUno', false);
+    bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70, 'plataformaDos', false);
+    bananaPodrida = new Banana(posXBanana, posYBanana, "podrida", 70, 70, 'piso', false);
+    vidaUno = new Hud(20, 25, 32, 32);
+    vidaDos = new Hud(65, 25, 32, 32);
+    vidaTres = new Hud(110, 25, 32, 32);
+    posCazador = new Hud(200, 25, 18, 20);
+    posMono = new Hud(250, 25, 28, 20);
+    posMeta = new Hud(597, 23, 12, 22);
+}
 
 //canvas
 function dibujar() {
     //document.getElementById('canvas').style.backgroundImage = "url(img/fondo_00.png), url(img/fondo_01.png), url(img/fondo_02.png), url(img/fondo_03.png), url(img/fondo_04.png)"
     //document.getElementById('canvas').style.backgroundPosition = "0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px"
-    canvas = document.getElementById('canvas');
-    ctx = canvas.getContext('2d');
+    
 
     // que se dibuje al comienzo y luego entre al intervalo
     //imgPersonajeMono.onload = function() {
     //    mono.dibujar(imgPersonajeMono);
     // }
-    imgPersonajeCazador.onload = function() {
-        cazador.dibujar(imgPersonajeCazador);
-    }
+    //imgPersonajeCazador.onload = function() {
+    //    cazador.dibujar(imgPersonajeCazador);
+    //}
 
 
 
     intervalo = setInterval(function() {
         borrar();
         if (vidas == 0) {
-            ctx.font = "100px SuperMario";
-            ctx.fillStyle = "#000000";
-            ctx.fillText('FIN', 300, 250);
+            document.getElementById('canvas').style.filter = 'blur(6px)';
+            document.getElementById('resultado').style.display = '';
+            document.getElementById('btnMenu').style.display = '';
+            clearInterval(intervalo);
         } else {
             plataformaUno.dibujar(imgPlataforma);
             plataformaDos.dibujar(imgPlataformaDos);
@@ -493,6 +556,7 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
         }
     }
 }
+
 //Objetod HUD
 function Hud(x, y, ancho, alto) {
     this.x = x;
@@ -509,10 +573,8 @@ function borrar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-
-
 function ui() {
-    ctx.font = "40px SuperMario";
+    ctx.font = "40px rainbowMonkey";
     ctx.fillStyle = "#2b2b2b";
     //ctx.fillText("Vidas: " + vidas, 715, 40); //el primero es el texto, el segundo es x y el tercero es y
     ctx.fillText(puntos, 690, 50);
@@ -588,11 +650,13 @@ document.addEventListener('keyup', function(e) {
 document.addEventListener('keyup', function(e) {
     if (e.keyCode == 27) {
         console.log("Salir a menu")
+        clearInterval(intervalo);
+        document.getElementById('canvas').style.filter = 'blur(6px)';
+        document.getElementById('btnJugar').style.display = '';
+        document.getElementById('btnJugar').innerHTML = 'REANUDAR';        
+        document.getElementById('btnTutorial').style.display = '';
+        document.getElementById('btnCreditos').style.display = '';
+        document.getElementById('logo').style.display = '';
     }
 });
 
-//Mouse Menu [cambiar document por el id del boton que pulse]
-document.addEventListener('click', function(o) {
-    //    console.log(o)
-    console.log("Click")
-});
