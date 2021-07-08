@@ -31,6 +31,7 @@ var posPlataformaDos;
 var imgPersonajeMono = new Image();
 var imgPersonajeMonoIzq = new Image();
 var imgPersonajeMonoSalta = new Image();
+var imgPersonajeMonoSaltaIzq = new Image();
 var imgPersonajeCazador = new Image();
 var imgPersonajeCazadorDisparo = new Image();
 var imgPlataforma = new Image();
@@ -49,6 +50,7 @@ var hudProgresoMeta = new Image();
 imgPersonajeMono.src = 'img/monoSpritemono.png';
 imgPersonajeMonoIzq.src = "img/monoSpritemono_flipped.png";//por el momento flipee la imagen desde archivo, despues vemos si lo podemos hacer desde aca
 imgPersonajeMonoSalta.src = "img/monoSalto.png";
+imgPersonajeMonoSaltaIzq.src = 'img/monoSaltoFlipped.png';
 imgPersonajeCazador.src = 'img/spriteCazador2.png';
 imgPersonajeCazadorDisparo.src = 'img/spriteCazadorDisparo.png';
 imgPlataforma.src = 'img/plataforma.png';
@@ -144,13 +146,15 @@ function dibujar() {
                 plataformaUno.sortear()
             }
             if (mono.saltando == true){
-                mono.dibujaPose(imgPersonajeMonoSalta, 0);
+                
                 if (mono.orientacion == "der") {
+                    mono.dibujaPose(imgPersonajeMonoSalta, 0);
                     if (mono.corre == true) {
                         mono.derecha();
                         //mono.dibujar(imgPersonajeMono);
                     }
                 } else {
+                    mono.dibujaPose(imgPersonajeMonoSaltaIzq, 0);
                     if (mono.corre == true) {
                         mono.izquierda();
                         //mono.dibujar(imgPersonajeMonoIzq);
@@ -445,28 +449,28 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
                 console.log("soy normal");
                 puntos += 5;
                 var boost = setInterval(function() {
-                    velocidadGlobal += 1;
+                    velocidadGlobal = 12;
                     cazador.cazadorRetrocede();
-                    mono.derecha();
+                    //mono.derecha();
                 }, 1000 / 25);
                 setTimeout(function() {
                         velocidadGlobal = 7;
                         clearInterval(boost);
-                    }, 1000) // boost por 2 segundos
+                    }, 2000) // boost por 2 segundos
 
 
             } else if (this.tipo == "oro") {
                 console.log("soy rainbow");
                 puntos += 10;
                 var boost = setInterval(function() {
-                    velocidadGlobal += 1;
-                    mono.derecha();
+                    velocidadGlobal = 18;
+                    //mono.derecha();
                     cazador.cazadorRetrocede();
                 }, 1000 / 25);
                 setTimeout(function() {
                         velocidadGlobal = 7;
                         clearInterval(boost);
-                    }, 2000) // boost por 3 segundos
+                    }, 3000) // boost por 3 segundos
 
 
 
@@ -474,7 +478,7 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
                 var boost = setInterval(function() {
                     velocidadGlobal = 3;
                     cazador.cazadorAvanza();
-                    mono.derecha();
+                    //mono.derecha();
                 }, 1000 / 25);
                 setTimeout(function() {
                         console.log("Listo")
