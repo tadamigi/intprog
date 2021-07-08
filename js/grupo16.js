@@ -272,10 +272,11 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
     this.ancho = ancho;
     this.orientacion = "der";
     this.velocidad = 0;
+    
     this.saltando = false;
     this.corre = false;
-    this.cazadorCorre = true;
     
+    this.cazadorCorre = true;
     this.disparando = false;
 
     //atributos animacion personaje
