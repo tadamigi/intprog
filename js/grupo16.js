@@ -4,13 +4,12 @@ var puntos = 000;
 var vidas = 3;
 var intervalo;
 var distanciaDisparo = 150;
-var distanciaDiferencia = 0;
+var distanciaDiferencia;
+var distanciaMeta = 20000;
 var tickerMovDerecha, tickerMovIzquierda;
 
 //bandera
 var seqDisparo = 0;
-
-
 
 //Variables físicas
 var velocidad = 4.2;
@@ -40,6 +39,7 @@ var imgPlataformaDos = new Image();
 var imgBanana = new Image();
 var imgBananaOro = new Image();
 var imgBananaPodrida = new Image();
+var imgMeta = new Image();
 // imagenes HUD
 var hudDardoOn = new Image();
 var hudDardoOff = new Image();
@@ -59,6 +59,7 @@ imgPlataformaDos.src = 'img/plataforma_2.png';
 imgBanana.src = 'img/bananaNM.png';
 imgBananaOro.src = 'img/bananaRB.png';
 imgBananaPodrida.src = 'img/bananaZB.png';
+imgMeta.src = 'img/meta.png';
 //SRC imagenes HUD
 hudProgresoCazador.src = 'img/faceCazador.png';
 hudProgresoMono.src = 'img/faceMono.png';
@@ -71,6 +72,8 @@ var posXMono = 350;
 var posYMono = 300;
 var posXCazador = -500;
 var posYCazador = 275;
+var posProgresoMono = 350;
+var posProgresoCazador = 1;
 
 
 //variables elementos
@@ -120,6 +123,7 @@ function jugar() {
 function menu() {
     document.getElementById('resultado').style.display = 'none';
     document.getElementById('btnMenu').style.display = 'none';
+    document.getElementById('creditos').style.display = 'none';
     document.getElementById('btnJugar').innerHTML = 'JUGAR';
     document.getElementById('btnJugar').style.display = '';
     document.getElementById('btnTutorial').style.display = '';
@@ -166,7 +170,13 @@ function reinicio() {
     posMono = new Hud(250, 25, 28, 20);
     posMeta = new Hud(597, 23, 12, 22);
 }
-
+function creditos(){
+    document.getElementById('btnJugar').style.display = 'none';
+    document.getElementById('btnTutorial').style.display = 'none';
+    document.getElementById('btnCreditos').style.display = 'none';
+    document.getElementById('logo').style.display = 'none';
+    document.getElementById('creditos').style.display = '';
+}
 //canvas
 function dibujar() {
     //document.getElementById('canvas').style.backgroundImage = "url(img/fondo_00.png), url(img/fondo_01.png), url(img/fondo_02.png), url(img/fondo_03.png), url(img/fondo_04.png)"
@@ -291,31 +301,8 @@ function dibujar() {
             
 
             ui();
-            ctx.fillStyle = '#3f3f3f';
-	        //dibuja rectangulo (x, y, widtth, height) en realidad linea
-	        ctx.fillRect(200, 47, 400, 3);
-
-            if (vidas == 3){
-                vidaUno.dibujar(hudDardoOff);
-                vidaDos.dibujar(hudDardoOff);
-                vidaTres.dibujar(hudDardoOff);
-            } else if (vidas == 2) {
-                vidaUno.dibujar(hudDardoOn);
-                vidaDos.dibujar(hudDardoOff);
-                vidaTres.dibujar(hudDardoOff);
-            } else if (vidas == 1) {
-                vidaUno.dibujar(hudDardoOn);
-                vidaDos.dibujar(hudDardoOn);
-                vidaTres.dibujar(hudDardoOff);
-            } else {
-                vidaUno.dibujar(hudDardoOn);
-                vidaDos.dibujar(hudDardoOn);
-                vidaTres.dibujar(hudDardoOn);
-            }
-            posCazador.dibujar(hudProgresoCazador);
-            posMono.dibujar(hudProgresoMono);
-            posMeta.dibujar(hudProgresoMeta);
-
+            
+            
 
         }
     }, 1000 / 25);
@@ -404,6 +391,7 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             posD = posC * 0.5;
             posE = posD * 0.5;
             canvas.style.backgroundPosition = posA + "px 0px, " + posB + "px 0px, " + posC + "px 0px, " + posD + "px 0px, " + posE + "px 0px";
+            
         } else {
             this.x += velocidadGlobal;
             this.orientacion = "der"
@@ -578,11 +566,43 @@ function ui() {
     ctx.fillStyle = "#2b2b2b";
     //ctx.fillText("Vidas: " + vidas, 715, 40); //el primero es el texto, el segundo es x y el tercero es y
     ctx.fillText(puntos, 690, 50);
+    ctx.fillStyle = '#3f3f3f';
+    //dibuja rectangulo (x, y, widtth, height) en realidad linea
+    ctx.fillRect(200, 47, 400, 3);
+
+    posProgresoMono = -(posA)+mono.x+350;
+    distanciaDiferencia = mono.x-(cazador.x);
+    posProgresoCazador = posProgresoMono-distanciaDiferencia;
+
+    posMono.x = (posProgresoMono*400/distanciaMeta)+200;
+    posCazador.x = (posProgresoCazador*400/distanciaMeta)+200;
+    posMono.dibujar(hudProgresoMono);
+    posCazador.dibujar(hudProgresoCazador);
+    posMeta.dibujar(hudProgresoMeta);
+    
+
+    if (vidas == 3){
+        vidaUno.dibujar(hudDardoOff);
+        vidaDos.dibujar(hudDardoOff);
+        vidaTres.dibujar(hudDardoOff);
+    } else if (vidas == 2) {
+        vidaUno.dibujar(hudDardoOn);
+        vidaDos.dibujar(hudDardoOff);
+        vidaTres.dibujar(hudDardoOff);
+    } else if (vidas == 1) {
+        vidaUno.dibujar(hudDardoOn);
+        vidaDos.dibujar(hudDardoOn);
+        vidaTres.dibujar(hudDardoOff);
+    } else {
+        vidaUno.dibujar(hudDardoOn);
+        vidaDos.dibujar(hudDardoOn);
+        vidaTres.dibujar(hudDardoOn);
+    }
 }
 
 //Inputs Movimiento personaje
 document.addEventListener('keydown', function(e) {
-    //    console.log('keydown'+mono.corre)
+    //console.log('keydown'+mono.corre)
     switch (e.keyCode) {
         case 38:
             mono.saltar();
@@ -620,6 +640,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 document.addEventListener('keyup', function(e) {
+    //console.log('keyup'+e.key)
     switch (e.keyCode) {
         case 38:
 
@@ -643,13 +664,12 @@ document.addEventListener('keyup', function(e) {
             mono.corre = false;
             break;
     }
-    console.log('keyup'+e.key)
 });
 
 //Esc a menu
 document.addEventListener('keyup', function(e) {
     if (e.keyCode == 27) {
-        console.log("Salir a menu")
+        //console.log("Salir a menu")
         clearInterval(intervalo);
         document.getElementById('canvas').style.filter = 'blur(6px)';
         document.getElementById('btnJugar').style.display = '';
