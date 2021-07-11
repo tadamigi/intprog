@@ -102,8 +102,6 @@ var posCazador = new Hud(200, 25, 18, 20);
 var posMono = new Hud(250, 25, 28, 20);
 var posMeta = new Hud(597, 23, 12, 22);
 
-
-
 //var fuente = new FontFace('rainbowMonkey', "url('resources/rainbow_monkey.ttf')");
 //document.fonts.add(fuente);
 
