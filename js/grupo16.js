@@ -94,7 +94,7 @@ var plataformaUno = new Plataforma(posXPlataformaUno, posYPlataformaUno, 180, 54
 var plataformaDos = new Plataforma(posXPlataformaDos, posYPlataformaDos, 180, 54, 23);
 var bananaUno = new Banana(posXBanana, posYBanana, "normal", 70, 70, 'plataformaUno', false);
 var bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70, 'plataformaDos', false);
-var bananaPodrida = new Banana(posXBanana, posYBanana, "podrida", 70, 70, 'piso', false);
+var bananaPodrida = new Banana(posXBanana, 360, "podrida", 50, 50, 'piso', true);
 var vidaUno = new Hud(20, 25, 32, 32);
 var vidaDos = new Hud(65, 25, 32, 32);
 var vidaTres = new Hud(110, 25, 32, 32);
@@ -160,7 +160,7 @@ function reinicio() {
     plataformaDos = new Plataforma(posXPlataformaDos, posYPlataformaDos, 180, 54, 23);
     bananaUno = new Banana(posXBanana, posYBanana, "normal", 70, 70, 'plataformaUno', false);
     bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70, 'plataformaDos', false);
-    bananaPodrida = new Banana(posXBanana, posYBanana, "podrida", 70, 70, 'piso', false);
+    bananaPodrida = new Banana(posXBanana, 360, "podrida", 50, 50, 'piso', false);
     vidaUno = new Hud(20, 25, 32, 32);
     vidaDos = new Hud(65, 25, 32, 32);
     vidaTres = new Hud(110, 25, 32, 32);
@@ -292,11 +292,21 @@ function dibujar() {
             } else {
                 bananaOro.x = 850;
             }
-            
+            if (bananaPodrida.activa == true){
+                bananaPodrida.dibujar(imgBananaPodrida);  
+                if (bananaPodrida.x <= (-100)){
+                    bananaPodrida.activa = false;
+                }
+            }
             
             bananaUno.colision();
             bananaOro.colision();
-            
+            bananaPodrida.colision();
+
+            if (bananaPodrida.activa == false){
+                bananaPodrida.sortear();
+                bananaPodrida.activa = true;
+            }
 
             ui();
             
@@ -389,7 +399,7 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             posD = posC * 0.5;
             posE = posD * 0.5;
             canvas.style.backgroundPosition = posA + "px 0px, " + posB + "px 0px, " + posC + "px 0px, " + posD + "px 0px, " + posE + "px 0px";
-            
+            bananaPodrida.posicionBanana();
         } else {
             this.x += velocidadGlobal;
             this.orientacion = "der"
@@ -486,12 +496,20 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
             this.x = plataformaDos.x + plataformaDos.ancho / 3;
             this.y = plataformaDos.y - 50;
         }
+        if (posAlto == 'piso'){
+            this.x -= velocidadGlobal;
+        }
         
+    }
+    this.sortear = function() {
+        this.x = Math.floor(
+            Math.random() * (2000 - 1200 + 1)
+        ) + 800;
     }
     this.colision = function() {
         if (
             (this.x < mono.x + mono.ancho / 4) &&
-            (this.x > mono.x - this.ancho) &&
+            (this.x > mono.x - this.ancho + 5) &&
             (this.y > mono.y - this.alto + 10) &&
             (this.y < mono.y + mono.alto)
         ) {
