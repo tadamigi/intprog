@@ -248,31 +248,40 @@ function dibujar() {
                     }
                 }
             }
-            
+            mono.actualizar();
+            //###############################################################################################################
+
             if (mono.x - cazador.x < distanciaDisparo) {
                 cazador.disparar();
             }
             cazador.actualizar();
-            if (cazador.disparando == false){
+
+            if (cazador.cazadorCorre == true){
                 cazador.dibujar(imgPersonajeCazador);
             } else {
-                if (seqDisparo <50){
-                    seqDisparo ++
+                seqDisparo ++
+                if (seqDisparo < 20){
+                    cazador.dibujaPose(imgPersonajeCazador, 1)
+                } else if (seqDisparo < 50){
                     cazador.dibujar(imgPersonajeCazadorDisparo);
-                }else{
-                                        seqDisparo = 0;
+                } else {
+                    seqDisparo = 0;
                     cazador.disparando = false;
                     cazador.cazadorCorre = true;
                 }
+                
             }
-            if (seqDisparo == 25){
+            if (seqDisparo == 20){
+                cazador.disparando = true;
+            }
+            if (seqDisparo == 40){
                 vidas -=1
             }    
            
-            mono.actualizar();
+            
             
             console.log(cazador.x);
-
+            //##################################################################################################################
             //pruebas con bananas
             if (plataformaUno.x > 800 && plataformaUno.x < 850) {
                 bananaUno.activa = true;
@@ -404,6 +413,9 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             this.x += velocidadGlobal;
             this.orientacion = "der"
         }
+        if (cazador.cazadorCorre == false && cazador.x > 0){
+            cazador.x -= velocidadGlobal
+        }
     }
     this.izquierda = function() {
         if (this.x >= 30) {
@@ -430,9 +442,9 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
     this.disparar = function() {
         this.cazadorCorre = false;
         this.contador = 0;
-        this.disparando = true;
-        cazador.x = 10;
-        this.cazadorCorre = false;
+        this.disparando = false;
+        //cazador.x = 10;
+        //this.cazadorCorre = false;
         
     }
     this.cazadorAvanza = function() {
@@ -552,11 +564,10 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
                         console.log("Listo")
                         velocidadGlobal = 7;
                         clearInterval(boost);
-                    }, 3000) // pierde velocidad por 3 segundos
+                    }, 2000) // pierde velocidad por 3 segundos
 
             }
             this.activa = false;
-            //this.sortear();
         }
     }
 }
