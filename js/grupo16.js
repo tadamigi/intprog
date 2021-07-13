@@ -46,6 +46,15 @@ var hudDardoOff = new Image();
 var hudProgresoMono = new Image();
 var hudProgresoCazador = new Image();
 var hudProgresoMeta = new Image();
+//SONIDOS
+var audioMusica = new Audio();
+var audioCountdown = new Audio();
+var audioBanana = new Audio();
+var audioBananaOro = new Audio();
+var audioBananaPodrida = new Audio();
+var audioDisparoYAuch = new Audio();
+var audioPerder = new Audio();
+var audioGanar = new Audio();
 
 //SRC Imagenes
 imgPersonajeMono.src = 'img/monoSpritemono.png';
@@ -66,6 +75,17 @@ hudProgresoMono.src = 'img/faceMono.png';
 hudProgresoMeta.src = 'img/flag.png';
 hudDardoOn.src = 'img/dardoOn.png';
 hudDardoOff.src = 'img/dardoOff.png';
+//SRC SONIDOS
+audioMusica.src = 'audio/bling.wav';
+audioCountdown.src = 'audio/bling.wav';
+audioBanana.src = 'audio/bling.wav';
+audioBananaOro.src = 'audio/bling.wav';
+audioBananaPodrida.src = 'audio/bling.wav';
+audioDisparoYAuch.src = 'audio/bling.wav';
+audioPerder.src = 'audio/bling.wav';
+audioGanar.src = 'audio/bling.wav';
+
+
 
 //Posicion Inicial Personajes
 var posXMono = 350;
@@ -94,7 +114,7 @@ var plataformaUno = new Plataforma(posXPlataformaUno, posYPlataformaUno, 180, 54
 var plataformaDos = new Plataforma(posXPlataformaDos, posYPlataformaDos, 180, 54, 23);
 var bananaUno = new Banana(posXBanana, posYBanana, "normal", 70, 70, 'plataformaUno', false);
 var bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70, 'plataformaDos', false);
-var bananaPodrida = new Banana(posXBanana, 360, "podrida", 50, 50, 'piso', true);
+var bananaPodrida = new Banana(1500, 360, "podrida", 50, 50, 'piso', true);
 var vidaUno = new Hud(20, 25, 32, 32);
 var vidaDos = new Hud(65, 25, 32, 32);
 var vidaTres = new Hud(110, 25, 32, 32);
@@ -451,7 +471,10 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
         cazador.x += 3;
     }
     this.cazadorRetrocede = function() {
-        cazador.x -= 5;
+        if (cazador.x > (-900)){
+            cazador.x -= 5;
+        }
+        
     }
 }
 
@@ -515,19 +538,20 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
     }
     this.sortear = function() {
         this.x = Math.floor(
-            Math.random() * (2000 - 1200 + 1)
+            Math.random() * (4500 - 2200 + 1)
         ) + 800;
     }
     this.colision = function() {
         if (
-            (this.x < mono.x + mono.ancho / 4) &&
-            (this.x > mono.x - this.ancho + 5) &&
-            (this.y > mono.y - this.alto + 10) &&
-            (this.y < mono.y + mono.alto)
+            (this.x < mono.x + (mono.ancho / 4)-25) &&
+            (this.x > mono.x - this.ancho + 25) &&
+            (this.y > mono.y - this.alto + 25) &&
+            (this.y < mono.y + mono.alto-25)
         ) {
             if (this.tipo == "normal") {
                 console.log("soy normal");
                 puntos += 5;
+                audioBanana.play();
                 var boost = setInterval(function() {
                     velocidadGlobal = 12;
                     cazador.cazadorRetrocede();
@@ -542,6 +566,7 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
             } else if (this.tipo == "oro") {
                 console.log("soy rainbow");
                 puntos += 10;
+                audioBananaOro.play();
                 var boost = setInterval(function() {
                     velocidadGlobal = 18;
                     //mono.derecha();
@@ -555,6 +580,7 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
 
 
             } else if (this.tipo == "podrida") {
+                audioBananaPodrida.play();
                 var boost = setInterval(function() {
                     velocidadGlobal = 3;
                     cazador.cazadorAvanza();
