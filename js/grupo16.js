@@ -77,14 +77,14 @@ hudProgresoMeta.src = 'img/flag.png';
 hudDardoOn.src = 'img/dardoOn.png';
 hudDardoOff.src = 'img/dardoOff.png';
 //SRC SONIDOS
-audioMusica.src = 'audio/bling.wav';
+audioMusica.src = 'audio/rm_music.mp3';
 audioCountdown.src = 'audio/bling.wav';
-audioBanana.src = 'audio/bling.wav';
-audioBananaOro.src = 'audio/bling.wav';
-audioBananaPodrida.src = 'audio/bling.wav';
+audioBanana.src = 'audio/bananaNM_sfx.mp3';
+audioBananaOro.src = 'audio/bananaRB_sfx.mp3';
+audioBananaPodrida.src = 'audio/bananaZB_sfx.mp3';
 audioDisparoYAuch.src = 'audio/bling.wav';
-audioPerder.src = 'audio/bling.wav';
-audioGanar.src = 'audio/bling.wav';
+audioPerder.src = 'audio/rm_lose.mp3';
+audioGanar.src = 'audio/rm_victory.mp3';
 
 
 
@@ -221,20 +221,24 @@ function dibujar() {
     //}
 
 
-
+audioMusica.loop = true;    
+audioMusica.play()
     intervalo = setInterval(function() {
         borrar();
         if (vidas == 0) {
+            audioMusica.pause();
             document.getElementById('canvas').style.filter = 'blur(6px)';
             document.getElementById('resultado').innerHTML = 'PERDISTE'
             document.getElementById('resultado').style.display = '';
             document.getElementById('btnMenu').style.display = '';
+            audioPerder.play();
             clearInterval(intervalo);
         } else if (distanciaRecorrida >= distanciaMeta) {
+            audioMusica.pause();
             document.getElementById('canvas').style.filter = 'blur(6px)';
             document.getElementById('resultadoVictoria').innerHTML = '¡¡Estas a salvo!! <br> Conseguiste '+puntos+' puntos'
             document.getElementById('pantallaVictoria').style.display = '';
-           
+            audioGanar.play();
             clearInterval(intervalo);
         } else {
             plataformaUno.dibujar(imgPlataforma);
