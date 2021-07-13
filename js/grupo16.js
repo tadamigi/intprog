@@ -6,6 +6,7 @@ var intervalo;
 var distanciaDisparo = 150;
 var distanciaDiferencia;
 var distanciaMeta = 20000;
+var distanciaRecorrida;
 var tickerMovDerecha, tickerMovIzquierda;
 
 //bandera
@@ -142,6 +143,9 @@ function menu() {
     document.getElementById('resultado').style.display = 'none';
     document.getElementById('btnMenu').style.display = 'none';
     document.getElementById('creditos').style.display = 'none';
+    document.getElementById('tutorial').style.display = 'none';
+    document.getElementById('pantallaVictoria').style.display = 'none';
+
     document.getElementById('btnJugar').innerHTML = 'JUGAR';
     document.getElementById('btnJugar').style.display = '';
     document.getElementById('btnTutorial').style.display = '';
@@ -188,6 +192,13 @@ function reinicio() {
     posMono = new Hud(250, 25, 28, 20);
     posMeta = new Hud(597, 23, 12, 22);
 }
+function tutorial() {
+    document.getElementById('btnJugar').style.display = 'none';
+    document.getElementById('btnTutorial').style.display = 'none';
+    document.getElementById('btnCreditos').style.display = 'none';
+    document.getElementById('logo').style.display = 'none';
+    document.getElementById('tutorial').style.display = '';
+}
 function creditos(){
     document.getElementById('btnJugar').style.display = 'none';
     document.getElementById('btnTutorial').style.display = 'none';
@@ -215,8 +226,15 @@ function dibujar() {
         borrar();
         if (vidas == 0) {
             document.getElementById('canvas').style.filter = 'blur(6px)';
+            document.getElementById('resultado').innerHTML = 'PERDISTE'
             document.getElementById('resultado').style.display = '';
             document.getElementById('btnMenu').style.display = '';
+            clearInterval(intervalo);
+        } else if (distanciaRecorrida >= distanciaMeta) {
+            document.getElementById('canvas').style.filter = 'blur(6px)';
+            document.getElementById('resultadoVictoria').innerHTML = '¡¡Estas a salvo!! <br> Conseguiste '+puntos+' puntos'
+            document.getElementById('pantallaVictoria').style.display = '';
+           
             clearInterval(intervalo);
         } else {
             plataformaUno.dibujar(imgPlataforma);
@@ -338,7 +356,7 @@ function dibujar() {
             }
 
             ui();
-            
+            distanciaRecorrida = -posA;
             
 
         }
