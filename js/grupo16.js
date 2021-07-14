@@ -141,6 +141,7 @@ function jugar() {
     plataformaUno.dibujar(imgPlataforma);
     plataformaDos.dibujar(imgPlataformaDos);
     mono.dibujar(imgPersonajeMono);
+    ui();
     setTimeout(function() {
         document.getElementById('countdown').innerHTML = '2';
     }, 900);
