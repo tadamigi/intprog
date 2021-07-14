@@ -115,7 +115,7 @@ var plataformaUno = new Plataforma(posXPlataformaUno, posYPlataformaUno, 180, 54
 var plataformaDos = new Plataforma(posXPlataformaDos, posYPlataformaDos, 180, 54, 23);
 var bananaUno = new Banana(posXBanana, posYBanana, "normal", 70, 70, 'plataformaUno', false);
 var bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70, 'plataformaDos', false);
-var bananaPodrida = new Banana(1500, 360, "podrida", 50, 50, 'piso', true);
+var bananaPodrida = new Banana(1500, 355, "podrida", 60, 60, 'piso', true);
 var vidaUno = new Hud(20, 25, 32, 32);
 var vidaDos = new Hud(65, 25, 32, 32);
 var vidaTres = new Hud(110, 25, 32, 32);
@@ -206,7 +206,7 @@ function reinicio() {
     plataformaDos = new Plataforma(posXPlataformaDos, posYPlataformaDos, 180, 54, 23);
     bananaUno = new Banana(posXBanana, posYBanana, "normal", 70, 70, 'plataformaUno', false);
     bananaOro = new Banana(posXBanana, posYBanana, "oro", 70, 70, 'plataformaDos', false);
-    bananaPodrida = new Banana(posXBanana, 360, "podrida", 50, 50, 'piso', false);
+    bananaPodrida = new Banana(posXBanana, 355, "podrida", 60, 60, 'piso', false);
     vidaUno = new Hud(20, 25, 32, 32);
     vidaDos = new Hud(65, 25, 32, 32);
     vidaTres = new Hud(110, 25, 32, 32);
