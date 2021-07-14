@@ -34,6 +34,7 @@
 </head>
 
 <body onload="carga()">
+    
     <div style="position: absolute; width: 800; height: 450;">
         <canvas width="800" height="450" id="canvas" style="
         border: 1px solid rgb(18, 37, 17); 
@@ -102,24 +103,36 @@
             color: white;
             display: none;
         ">
-            <p id="resultadoVictoria">
-                ¡¡Estas a salvo!! <br> Conseguiste mucho puntos
+            
+            <img src="img/victory.png" style="
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            ">
+            <p id="resultadoVictoria" style="
+                position: absolute;
+                top: 54%;
+                left: 37%;
+                transform: translate(-50%, -50%);
+                font-size: 20px;
+            ">
+                Score<br>120
             </p>
-            <img src="img/mono_pose.png" alt="">
             <button id='btnMenu2' class='button' style='
         position: absolute;
-        left: 50%;
-        top: 90%;
+        left: 58%;
+        top: 60%;
         transform: translate(-50%, -50%);
         color: white;
-        border: none;
+        border: 1px solid;
         border-radius: 25px;
-        padding: 10px 20px;
+        padding: 8px 15px;
         text-align: center;
-        font-size: 40px;
+        font-size: 17px;
         font-family: rainbowMonkey;
 
-        ' onclick="menu()">MENU PRINCIPAL</button>
+        ' onclick="menu()">Jugar otra vez</button>
         </div>
         <button id='resultado' style='
         position:absolute; 
@@ -215,6 +228,22 @@
             <p>Pausa</p>
             <div class="keys">ESC</div>
         </div>
+        <p id="countdown" style="
+        position:absolute; 
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        border: none;
+        text-align: center;
+        text-shadow: 3px 3px 4px rgb(28, 37, 15);
+        font-size: 100px;
+        font-family: rainbowMonkey;
+        line-height: 100px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        display: none;
+        ">3</p>
     </div>
      
     

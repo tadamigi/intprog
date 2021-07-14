@@ -6,8 +6,9 @@ var intervalo;
 var distanciaDisparo = 150;
 var distanciaDiferencia;
 var distanciaMeta = 20000;
-var distanciaRecorrida;
+var distanciaRecorrida = 0;
 var tickerMovDerecha, tickerMovIzquierda;
+var countdownActive = false;
 
 //bandera
 var seqDisparo = 0;
@@ -41,6 +42,7 @@ var imgBanana = new Image();
 var imgBananaOro = new Image();
 var imgBananaPodrida = new Image();
 var imgMeta = new Image();
+var imgAuch = new Image();
 // imagenes HUD
 var hudDardoOn = new Image();
 var hudDardoOff = new Image();
@@ -70,6 +72,7 @@ imgBanana.src = 'img/bananaNM.png';
 imgBananaOro.src = 'img/bananaRB.png';
 imgBananaPodrida.src = 'img/bananaZB.png';
 imgMeta.src = 'img/meta.png';
+imgAuch.src = 'img/auch.png';
 //SRC imagenes HUD
 hudProgresoCazador.src = 'img/faceCazador.png';
 hudProgresoMono.src = 'img/faceMono.png';
@@ -78,15 +81,13 @@ hudDardoOn.src = 'img/dardoOn.png';
 hudDardoOff.src = 'img/dardoOff.png';
 //SRC SONIDOS
 audioMusica.src = 'audio/rm_music.mp3';
-audioCountdown.src = 'audio/bling.wav';
+audioCountdown.src = 'audio/countdown.mp3';
 audioBanana.src = 'audio/bananaNM_sfx.mp3';
 audioBananaOro.src = 'audio/bananaRB_sfx.mp3';
 audioBananaPodrida.src = 'audio/bananaZB_sfx.mp3';
-audioDisparoYAuch.src = 'audio/bling.wav';
+audioDisparoYAuch.src = 'audio/rm_disparoAuch.mp3';
 audioPerder.src = 'audio/rm_lose.mp3';
 audioGanar.src = 'audio/rm_victory.mp3';
-
-
 
 //Posicion Inicial Personajes
 var posXMono = 350;
@@ -96,17 +97,16 @@ var posYCazador = 275;
 var posProgresoMono = 350;
 var posProgresoCazador = 1;
 
-
 //variables elementos
 var posXPlataformaUno = 700;
 var posYPlataformaUno = 235;
 var posXPlataformaDos = 900;
 var posYPlataformaDos = 120;
 var alturaPlataforma = [235, 120];
+
 //var alturaBananas = [235, 120, 275];
 var posXBanana = 700;
 var posYBanana = 235;
-
 
 //Creacion Instancias
 var mono = new Personaje(posXMono, posYMono, 465, 116, 4, 2);
@@ -123,9 +123,6 @@ var posCazador = new Hud(200, 25, 18, 20);
 var posMono = new Hud(250, 25, 28, 20);
 var posMeta = new Hud(597, 23, 12, 22);
 
-//var fuente = new FontFace('rainbowMonkey', "url('resources/rainbow_monkey.ttf')");
-//document.fonts.add(fuente);
-
 function carga() {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
@@ -137,7 +134,29 @@ function jugar() {
     document.getElementById('btnTutorial').style.display = 'none';
     document.getElementById('btnCreditos').style.display = 'none';
     document.getElementById('logo').style.display = 'none';
-    dibujar();
+    countdownActive = true;
+    audioCountdown.play();
+    document.getElementById('countdown').innerHTML = '3';
+    document.getElementById('countdown').style.display = '';
+    plataformaUno.dibujar(imgPlataforma);
+    plataformaDos.dibujar(imgPlataformaDos);
+    mono.dibujar(imgPersonajeMono);
+    setTimeout(function() {
+        document.getElementById('countdown').innerHTML = '2';
+    }, 900);
+    setTimeout(function() {
+        document.getElementById('countdown').innerHTML = '1';
+    }, 1900);
+    setTimeout(function() {
+        document.getElementById('countdown').innerHTML = 'GO!';
+    }, 2900);
+    setTimeout(function() {
+        document.getElementById('countdown').style.display = 'none';
+        borrar();
+        countdownActive = false;
+        dibujar();
+    }, 3100);
+    
 }
 function menu() {
     document.getElementById('resultado').style.display = 'none';
@@ -160,6 +179,7 @@ function reinicio() {
     vidas = 3;
     velocidadGlobal = 7;
     velocidadCazador = 1;
+    distanciaRecorrida = 0;
     velocidad = 4.2;
     gravedad = 1;
     posA = 0;
@@ -191,6 +211,7 @@ function reinicio() {
     posCazador = new Hud(200, 25, 18, 20);
     posMono = new Hud(250, 25, 28, 20);
     posMeta = new Hud(597, 23, 12, 22);
+    audioMusica.currentTime = 0;
 }
 function tutorial() {
     document.getElementById('btnJugar').style.display = 'none';
@@ -207,22 +228,11 @@ function creditos(){
     document.getElementById('creditos').style.display = '';
 }
 //canvas
+
 function dibujar() {
-    //document.getElementById('canvas').style.backgroundImage = "url(img/fondo_00.png), url(img/fondo_01.png), url(img/fondo_02.png), url(img/fondo_03.png), url(img/fondo_04.png)"
-    //document.getElementById('canvas').style.backgroundPosition = "0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px"
-    
+    audioMusica.loop = true;    
+    audioMusica.play()
 
-    // que se dibuje al comienzo y luego entre al intervalo
-    //imgPersonajeMono.onload = function() {
-    //    mono.dibujar(imgPersonajeMono);
-    // }
-    //imgPersonajeCazador.onload = function() {
-    //    cazador.dibujar(imgPersonajeCazador);
-    //}
-
-
-audioMusica.loop = true;    
-audioMusica.play()
     intervalo = setInterval(function() {
         borrar();
         if (vidas == 0) {
@@ -236,7 +246,7 @@ audioMusica.play()
         } else if (distanciaRecorrida >= distanciaMeta) {
             audioMusica.pause();
             document.getElementById('canvas').style.filter = 'blur(6px)';
-            document.getElementById('resultadoVictoria').innerHTML = '¡¡Estas a salvo!! <br> Conseguiste '+puntos+' puntos'
+            document.getElementById('resultadoVictoria').innerHTML = 'Score<br>'+puntos
             document.getElementById('pantallaVictoria').style.display = '';
             audioGanar.play();
             clearInterval(intervalo);
@@ -258,6 +268,9 @@ audioMusica.play()
             if (plataformaUno.x > plataformaDos.x && plataformaUno.x < plataformaDos.x + plataformaDos.ancho) {
                 plataformaUno.sortear()
             }
+            if (distanciaRecorrida > distanciaMeta-1000){
+                ctx.drawImage(imgMeta, posA+distanciaMeta+280, 371, 316, 50);
+            }            
             if (mono.saltando == true){
                 
                 if (mono.orientacion == "der") {
@@ -306,22 +319,23 @@ audioMusica.play()
                     cazador.dibujaPose(imgPersonajeCazador, 1)
                 } else if (seqDisparo < 50){
                     cazador.dibujar(imgPersonajeCazadorDisparo);
+                    audioDisparoYAuch.play();
                 } else {
                     seqDisparo = 0;
                     cazador.disparando = false;
                     cazador.cazadorCorre = true;
                 }
-                
             }
             if (seqDisparo == 20){
                 cazador.disparando = true;
             }
             if (seqDisparo == 40){
                 vidas -=1
-            }    
+            }  
+            if (seqDisparo > 30 && seqDisparo <50){
+                ctx.drawImage(imgAuch, mono.x-50, mono.y-15);
+            }  
            
-            
-            
             console.log(cazador.x);
             //##################################################################################################################
             //pruebas con bananas
@@ -358,10 +372,8 @@ audioMusica.play()
                 bananaPodrida.sortear();
                 bananaPodrida.activa = true;
             }
-
             ui();
             distanciaRecorrida = -posA;
-            
 
         }
     }, 1000 / 25);
@@ -609,7 +621,7 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
                     //mono.derecha();
                 }, 1000 / 25);
                 setTimeout(function() {
-                        console.log("Listo")
+                        //console.log("Listo")
                         velocidadGlobal = 7;
                         clearInterval(boost);
                     }, 2000) // pierde velocidad por 3 segundos
@@ -645,12 +657,12 @@ function ui() {
     //dibuja rectangulo (x, y, widtth, height) en realidad linea
     ctx.fillRect(200, 47, 400, 3);
 
-    posProgresoMono = -(posA)+mono.x+350;
-    distanciaDiferencia = mono.x-(cazador.x);
+    posProgresoMono = distanciaRecorrida+mono.x+350;
+    distanciaDiferencia = mono.x-cazador.x;
     posProgresoCazador = posProgresoMono-distanciaDiferencia;
 
-    posMono.x = (posProgresoMono*400/distanciaMeta)+200;
-    posCazador.x = (posProgresoCazador*400/distanciaMeta)+200;
+    posMono.x = (posProgresoMono*390/(distanciaMeta+mono.x+450))+200;
+    posCazador.x = (posProgresoCazador*390/(distanciaMeta+mono.x+450))+200;
     posMono.dibujar(hudProgresoMono);
     posCazador.dibujar(hudProgresoCazador);
     posMeta.dibujar(hudProgresoMeta);
@@ -743,9 +755,10 @@ document.addEventListener('keyup', function(e) {
 
 //Esc a menu
 document.addEventListener('keyup', function(e) {
-    if (e.keyCode == 27) {
+    if (e.keyCode == 27 && countdownActive == false) {
         //console.log("Salir a menu")
         clearInterval(intervalo);
+        audioMusica.pause();
         document.getElementById('canvas').style.filter = 'blur(6px)';
         document.getElementById('btnJugar').style.display = '';
         document.getElementById('btnJugar').innerHTML = 'REANUDAR';        
