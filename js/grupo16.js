@@ -772,6 +772,8 @@ document.addEventListener('keyup', function(e) {
 var interval = setInterval(function() {
     if(document.readyState == 'complete') {
         clearInterval(interval);
+        document.getElementById('load').style.display = 'none';
         console.log('listo')
     }    
 }, 100);
+///fin de js perri

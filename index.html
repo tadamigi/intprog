@@ -29,12 +29,38 @@
             display: inline-block;
             line-height: 30px;
         }
+        .load {
+            position: absolute;
+            width: 800px;
+            height: 450px;
+            background:rgb(18, 37, 17);
+            display: '';
+            background-image: url('img/mono_pose.png');
+            background-repeat: no-repeat;
+            background-size: 60px;
+            background-position: 50% 30%;
+        }
+        .loading {
+            position: absolute;
+            top: 45%;
+            left: 46%;
+            border: 10px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 10px solid #141a1f;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
     <script src="js/grupo16.js"></script>
 </head>
 
 <body onload="carga()">
-    <div style="position: absolute; width: 800; height: 450;">
+    <div style="position: absolute;">
         <canvas width="800" height="450" id="canvas" style="
         border: 1px solid rgb(18, 37, 17); 
         background-image: url(&quot;img/fondo_00.png&quot;), url(&quot;img/fondo_01.png&quot;), url(&quot;img/fondo_02.png&quot;), url(&quot;img/fondo_03.png&quot;), url(&quot;img/fondo_04.png&quot;); 
@@ -243,9 +269,12 @@
         margin-bottom: 0px;
         display: none;
         ">3</p>
+        
     </div>
-    <audio src="audio/rm_music.mp3" controls></audio>
-
+    <div class="load" id="load">
+        <div class="loading"></div>
+    </div>
+    
 </body>
 
 </html>
