@@ -768,3 +768,12 @@ document.addEventListener('keyup', function(e) {
     }
 });
 
+
+
+// Polling for the sake of my intern tests
+var interval = setInterval(function() {
+    if(document.readyState === 'complete') {
+        clearInterval(interval);
+        console.log('ready')
+    }    
+}, 100);
