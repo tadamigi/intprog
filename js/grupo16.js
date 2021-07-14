@@ -92,7 +92,7 @@ audioGanar.src = 'audio/rm_victory.mp3';
 //Posicion Inicial Personajes
 var posXMono = 350;
 var posYMono = 300;
-var posXCazador = -250;
+var posXCazador = -100;
 var posYCazador = 275;
 var posProgresoMono = 350;
 var posProgresoCazador = 1;
@@ -141,6 +141,7 @@ function jugar() {
     plataformaUno.dibujar(imgPlataforma);
     plataformaDos.dibujar(imgPlataformaDos);
     mono.dibujar(imgPersonajeMono);
+    cazador.dibujar(imgPersonajeCazador);
     ui();
     setTimeout(function() {
         document.getElementById('countdown').innerHTML = '2';
@@ -191,7 +192,7 @@ function reinicio() {
     document.getElementById('canvas').style.backgroundPosition = "0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px"
     posXMono = 350;
     posYMono = 300;
-    posXCazador = -250;
+    posXCazador = -100;
     posYCazador = 275;
     posXPlataformaUno = 700;
     posYPlataformaUno = 235;
@@ -507,7 +508,7 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
         cazador.x += 3;
     }
     this.cazadorAvanzaLeve = function() {
-        cazador.x += 0.25;
+        cazador.x += 1;
     }
     this.cazadorRetrocede = function() {
         if (cazador.x > (-300)){
