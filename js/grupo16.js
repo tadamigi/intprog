@@ -92,7 +92,7 @@ audioGanar.src = 'audio/rm_victory.mp3';
 //Posicion Inicial Personajes
 var posXMono = 350;
 var posYMono = 300;
-var posXCazador = -500;
+var posXCazador = -250;
 var posYCazador = 275;
 var posProgresoMono = 350;
 var posProgresoCazador = 1;
@@ -191,7 +191,7 @@ function reinicio() {
     document.getElementById('canvas').style.backgroundPosition = "0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px"
     posXMono = 350;
     posYMono = 300;
-    posXCazador = -500;
+    posXCazador = -250;
     posYCazador = 275;
     posXPlataformaUno = 700;
     posYPlataformaUno = 235;
@@ -464,6 +464,7 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
             posE = posD * 0.5;
             canvas.style.backgroundPosition = posA + "px 0px, " + posB + "px 0px, " + posC + "px 0px, " + posD + "px 0px, " + posE + "px 0px";
             bananaPodrida.posicionBanana();
+            cazador.cazadorAvanzaLeve();
         } else {
             this.x += velocidadGlobal;
             this.orientacion = "der"
@@ -505,9 +506,12 @@ function Personaje(x, y, ancho, alto, fotogramasTotales, tiempoPorFotograma) { /
     this.cazadorAvanza = function() {
         cazador.x += 3;
     }
+    this.cazadorAvanzaLeve = function() {
+        cazador.x += 0.25;
+    }
     this.cazadorRetrocede = function() {
-        if (cazador.x > (-900)){
-            cazador.x -= 5;
+        if (cazador.x > (-300)){
+            cazador.x -= 3;
         }
         
     }
@@ -617,7 +621,7 @@ function Banana(x, y, tipo, ancho, alto, posAlto, activa) {
             } else if (this.tipo == "podrida") {
                 audioBananaPodrida.play();
                 var boost = setInterval(function() {
-                    velocidadGlobal = 3;
+                    velocidadGlobal = 2.5;
                     cazador.cazadorAvanza();
                     //mono.derecha();
                 }, 1000 / 25);
